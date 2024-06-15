@@ -7,7 +7,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 
 class NetworkManager {
 
-
+    private val url = "http://nabster.tplinkdns.com:8000/api/"
     interface TokenCallback {
         fun onTokenReceived(token: String?)
         fun onError(error: Throwable)
@@ -22,7 +22,7 @@ class NetworkManager {
             val body = requestBody.toRequestBody("application/json".toMediaType())
 
             val request = Request.Builder()
-                .url("http://nabster.tplinkdns.com:8000/api/auth/login")
+                .url(url + "auth/login")
                 .post(body)
                 .build()
 
@@ -55,5 +55,23 @@ class NetworkManager {
         }
         thread.start()
 
+    }
+
+    fun getTasks(token: String){
+        var thread = Thread{
+            val client = OkHttpClient()
+            val request = Request.Builder()
+                .url(url + "tasks")
+                .header("Authorization", "Bearer $token")
+                .build()
+            try {
+                val response = client.newCall(request).execute()
+                val tasks = response.body?.string()
+                println(tasks)
+            } catch (error: Throwable) {
+                println("Error: $error")
+            }
+        }
+        thread.start()
     }
 }

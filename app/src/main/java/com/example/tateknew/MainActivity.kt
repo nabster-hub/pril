@@ -86,8 +86,7 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
 
-        val jsonObject = Gson().fromJson<JsonObject>(token, JsonObject::class.java)
-        val accessToken = jsonObject.get("access_token").asString
+
 
         navView.setNavigationItemSelectedListener { menuItem ->
             when(menuItem.itemId){

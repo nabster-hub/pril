@@ -17,5 +17,6 @@
     <string name="enterTitle">Вход</string>
     <string name="invalid_email">Email is not valid</string>
     <string name="User_Home">Страница пользователя</string>
+    <string name="get_tasks">Получить задачи</string>
 
 </resources>
