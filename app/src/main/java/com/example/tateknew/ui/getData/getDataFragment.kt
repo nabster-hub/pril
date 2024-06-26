@@ -1,5 +1,6 @@
 package com.example.tateknew.ui.getData
 
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.tateknew.DatabaseHelper
 import com.example.tateknew.NetworkManager
 import com.example.tateknew.TokenManager
 import com.example.tateknew.databinding.FragmentGetdataBinding
@@ -33,6 +35,8 @@ class getDataFragment : Fragment() {
         _binding = FragmentGetdataBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+
+
         val textView: TextView = binding.textGetData
         val button = binding.getTasks
         getDataViewModel.text.observe(viewLifecycleOwner) {
@@ -46,13 +50,13 @@ class getDataFragment : Fragment() {
     }
 
     private fun getDatas() {
+        var dbHelper = DatabaseHelper(this.requireContext())
         val networkManager = NetworkManager()
         val token = TokenManager(this.requireContext()).getToken()
         val jsonObject = Gson().fromJson<JsonObject>(token, JsonObject::class.java)
         val accessToken = jsonObject.get("access_token").asString
 
-        networkManager.getTasks(accessToken)
-
+        networkManager.getTasks(accessToken, dbHelper)
     }
 
     override fun onDestroyView() {

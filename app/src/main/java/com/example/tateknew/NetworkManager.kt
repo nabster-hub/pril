@@ -1,9 +1,12 @@
 package com.example.tateknew
 
+import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 
 class NetworkManager {
 
@@ -57,7 +60,7 @@ class NetworkManager {
 
     }
 
-    fun getTasks(token: String){
+    fun getTasks(token: String,  dbHelper: DatabaseHelper){
         var thread = Thread{
             val client = OkHttpClient()
             val request = Request.Builder()
@@ -67,11 +70,34 @@ class NetworkManager {
             try {
                 val response = client.newCall(request).execute()
                 val tasks = response.body?.string()
-                println(tasks)
+                if(!tasks.isNullOrEmpty()){
+                    val validJsonString = validateAndFixJson(tasks)
+                    val jsonObject = JSONObject(validJsonString)
+                    Log.d("Parsed JSON", jsonObject.toString())
+                    parseTasks(jsonObject, dbHelper)
+                }else{
+                    println("Received empty response")
+                }
+
             } catch (error: Throwable) {
                 println("Error: $error")
             }
         }
         thread.start()
     }
+
+    private fun parseTasks(tasksObject: JSONObject, dbHelper: DatabaseHelper) {
+        tasksObject.keys().forEach { key ->
+            val objectsArray = tasksObject.getJSONArray(key)
+            for (i in 0 until objectsArray.length()) {
+                val obj = objectsArray.getJSONObject(i)
+                dbHelper.insertObject(obj)
+            }
+        }
+    }
+
+    fun validateAndFixJson(jsonString: String): String {
+        return jsonString.replace("\\\\", "\\")
+    }
+
 }
