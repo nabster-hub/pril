@@ -140,7 +140,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 db.insertOrThrow(TABLE_MTRS, null, values)
             }
             cursor.close()
-            db.insertOrThrow(TABLE_MTRS, null, values)
+
             val abonent = mtr.optJSONObject("abonents")
             if (abonent != null) {
                 insertAbonent(abonent)
@@ -178,7 +178,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 db.insertOrThrow(TABLE_ABONENTS, null, values)
             }
             cursor.close()
-            db.insertOrThrow(TABLE_ABONENTS, null, values)
+
         } catch (e: Exception) {
             Log.e("DatabaseHelper", "Error inserting abonent: $values", e)
         }

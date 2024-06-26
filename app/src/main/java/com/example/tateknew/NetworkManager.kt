@@ -6,6 +6,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONException
 import org.json.JSONObject
 
 class NetworkManager {
@@ -97,7 +98,15 @@ class NetworkManager {
     }
 
     fun validateAndFixJson(jsonString: String): String {
-        return jsonString.replace("\\\\", "\\")
+        val string = jsonString.replace("\\\\", "\\")
+
+        try{
+            val jsonObject = JSONObject(jsonString)
+        }catch (e: JSONException){
+            Log.e("JSONParsing", "Error parsing JSON at character: ${e.message}")
+            Log.e("JSONParsing", "JSON string: $jsonString")
+        }
+        return string
     }
 
 }
