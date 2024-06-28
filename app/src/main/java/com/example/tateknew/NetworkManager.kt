@@ -1,6 +1,5 @@
 package com.example.tateknew
 
-import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -61,31 +60,59 @@ class NetworkManager {
 
     }
 
-    fun getTasks(token: String,  dbHelper: DatabaseHelper){
-        var thread = Thread{
+    fun getTasks(token: String, dbHelper: DatabaseHelper): Boolean {
+        return try {
             val client = OkHttpClient()
             val request = Request.Builder()
                 .url(url + "tasks")
                 .header("Authorization", "Bearer $token")
                 .build()
-            try {
-                val response = client.newCall(request).execute()
-                val tasks = response.body?.string()
-                if(!tasks.isNullOrEmpty()){
-                    val validJsonString = validateAndFixJson(tasks)
-                    val jsonObject = JSONObject(validJsonString)
-                    Log.d("Parsed JSON", jsonObject.toString())
-                    parseTasks(jsonObject, dbHelper)
-                }else{
-                    println("Received empty response")
-                }
-
-            } catch (error: Throwable) {
-                println("Error: $error")
+            val response = client.newCall(request).execute()
+            val tasks = response.body?.string()
+            if (!tasks.isNullOrEmpty()) {
+                val validJsonString = validateAndFixJson(tasks)
+                val jsonObject = JSONObject(validJsonString)
+                Log.d("Parsed JSON", jsonObject.toString())
+                parseTasks(jsonObject, dbHelper)
+                true
+            } else {
+                println("Received empty response")
+                false
             }
+        } catch (error: Throwable) {
+            println("Error: $error")
+            false
         }
-        thread.start()
     }
+
+//    fun getTasks(token: String, dbHelper: DatabaseHelper, callback: (Boolean) -> Unit){
+//        var thread = Thread{
+//            val client = OkHttpClient()
+//            val request = Request.Builder()
+//                .url(url + "tasks")
+//                .header("Authorization", "Bearer $token")
+//                .build()
+//            try {
+//                val response = client.newCall(request).execute()
+//                val tasks = response.body?.string()
+//                if(!tasks.isNullOrEmpty()){
+//                    val validJsonString = validateAndFixJson(tasks)
+//                    val jsonObject = JSONObject(validJsonString)
+//                    Log.d("Parsed JSON", jsonObject.toString())
+//                    parseTasks(jsonObject, dbHelper)
+//                    callback(true)
+//                }else{
+//                    println("Received empty response")
+//                    callback(false)
+//                }
+//
+//            } catch (error: Throwable) {
+//                println("Error: $error")
+//                callback(false)
+//            }
+//        }
+//        thread.start()
+//    }
 
     private fun parseTasks(tasksObject: JSONObject, dbHelper: DatabaseHelper) {
         tasksObject.keys().forEach { key ->
