@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.getData, R.id.nav_gallery, R.id.nav_slideshow
+                R.id.nav_home, R.id.getData, R.id.objectListFragment, R.id.nav_gallery, R.id.nav_slideshow
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -97,6 +97,9 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.getData)
 
                     println("home")
+                }
+                R.id.objectListFragment ->{
+                    navController.navigate(R.id.objectListFragment)
                 }
                 R.id.nav_gallery -> {
                     // Ваш код для обработки нажатия на Gallery

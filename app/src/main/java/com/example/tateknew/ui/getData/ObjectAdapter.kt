@@ -1,4 +1,4 @@
-package com.example.tateknew.tasks.getTps
+package com.example.tateknew.ui.getData
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tateknew.R
-import com.example.tateknew.tasks.ObjectItem
 
 class ObjectAdapter(
     private val objects: List<ObjectItem>,

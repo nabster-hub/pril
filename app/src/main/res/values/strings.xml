@@ -18,5 +18,7 @@
     <string name="invalid_email">Email is not valid</string>
     <string name="User_Home">Страница пользователя</string>
     <string name="get_tasks">Получить задачи</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

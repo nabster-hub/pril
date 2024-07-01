@@ -5,6 +5,8 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import com.example.tateknew.ui.getData.ObjectItem
+import com.example.tateknew.ui.getData.MtrItem
 import org.json.JSONObject
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -76,6 +78,56 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         db.execSQL("DROP TABLE IF EXISTS $TABLE_MTRS")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_ABONENTS")
         onCreate(db)
+    }
+
+    fun getAllObjects(): List<ObjectItem> {
+        val objects = mutableListOf<ObjectItem>()
+        val db = readableDatabase
+        val cursor = db.query(TABLE_OBJECTS, null, null, null, null, null, null)
+        if (cursor.moveToFirst()) {
+            do {
+                val objectItem = ObjectItem(
+                    id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                    name = cursor.getString(cursor.getColumnIndexOrThrow("name")),
+                    baseId = cursor.getInt(cursor.getColumnIndexOrThrow("base_id")),
+                    fullName = cursor.getString(cursor.getColumnIndexOrThrow("full_name")),
+                    createdAt = cursor.getString(cursor.getColumnIndexOrThrow("created_at")),
+                    updatedAt = cursor.getString(cursor.getColumnIndexOrThrow("updated_at"))
+                )
+                objects.add(objectItem)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return objects
+    }
+
+    fun getMtrsByObjectId(objectId: Int): List<MtrItem> {
+        val mtrs = mutableListOf<MtrItem>()
+        val db = readableDatabase
+        val cursor = db.query(TABLE_MTRS, null, "nobj_id = ?", arrayOf(objectId.toString()), null, null, null)
+        if (cursor.moveToFirst()) {
+            do {
+                val mtrItem = MtrItem(
+                    id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                    abonentId = cursor.getInt(cursor.getColumnIndexOrThrow("abonent_id")),
+                    nobjId = cursor.getInt(cursor.getColumnIndexOrThrow("nobj_id")),
+                    baseId = cursor.getInt(cursor.getColumnIndexOrThrow("base_id")),
+                    name = cursor.getString(cursor.getColumnIndexOrThrow("name")),
+                    puName = cursor.getString(cursor.getColumnIndexOrThrow("pu_name")),
+                    itemNo = cursor.getString(cursor.getColumnIndexOrThrow("item_no")),
+                    status = cursor.getInt(cursor.getColumnIndexOrThrow("status")),
+                    ecapId = cursor.getInt(cursor.getColumnIndexOrThrow("ecap_id")),
+                    sredrashod = cursor.getInt(cursor.getColumnIndexOrThrow("sredrashod")),
+                    vl = cursor.getString(cursor.getColumnIndexOrThrow("vl")),
+                    ktt = cursor.getInt(cursor.getColumnIndexOrThrow("ktt")),
+                    createdAt = cursor.getString(cursor.getColumnIndexOrThrow("created_at")),
+                    updatedAt = cursor.getString(cursor.getColumnIndexOrThrow("updated_at"))
+                )
+                mtrs.add(mtrItem)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return mtrs
     }
 
 

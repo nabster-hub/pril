@@ -13,6 +13,10 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/menu_getdata" />
         <item
+            android:id="@+id/objectListFragment"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Object List" />
+        <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/menu_gallery" />
