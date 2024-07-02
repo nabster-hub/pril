@@ -2,6 +2,7 @@ package com.example.tateknew
 
 import android.content.Context
 import android.util.Base64
+import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import org.json.JSONObject
@@ -20,30 +21,43 @@ class TokenManager(context: Context) {
     )
 
     fun saveToken(token: String) {
-        val editor = sharedPreferences.edit()
-        editor.putString("jwt_token", token)
-        editor.apply()
+        try {
+            val editor = sharedPreferences.edit()
+            editor.putString("jwt_token", token)
+            editor.apply()
+            Log.d("TokenManager", "Token saved successfully")
+        } catch (e: Exception) {
+            Log.e("TokenManager", "Error saving token: ${e.message}")
+        }
     }
 
     fun getToken(): String? {
-        val token = sharedPreferences.getString("jwt_token", null)
-        println("Retrieved token: $token")
-        return token?.let{
-            it.trim('"')
+        return try {
+            val token = sharedPreferences.getString("jwt_token", null)
+            Log.d("TokenManager", "Retrieved token: $token")
+            token?.trim('"')
+        } catch (e: Exception) {
+            Log.e("TokenManager", "Error retrieving token: ${e.message}")
+            null
         }
     }
 
     fun clearToken() {
-        val editor = sharedPreferences.edit()
-        editor.remove("jwt_token")
-        editor.apply()
+        try {
+            val editor = sharedPreferences.edit()
+            editor.remove("jwt_token")
+            editor.apply()
+            Log.d("TokenManager", "Token cleared successfully")
+        } catch (e: Exception) {
+            Log.e("TokenManager", "Error clearing token: ${e.message}")
+        }
     }
 
     fun isTokenExpired(token: String): Boolean {
-        try {
+        return try {
             val parts = token.split(".")
-           // print(parts)
             if (parts.size != 3) {
+                Log.e("TokenManager", "Invalid JWT token format")
                 return true // Invalid JWT
             }
 
@@ -53,11 +67,10 @@ class TokenManager(context: Context) {
             val exp = jsonPayload.getLong("exp")
             val now = Date().time / 1000
 
-            return now > exp
-            return false
+            now > exp
         } catch (e: Exception) {
-            e.printStackTrace()
-            return true
+            Log.e("TokenManager", "Error checking token expiration: ${e.message}")
+            true
         }
     }
 

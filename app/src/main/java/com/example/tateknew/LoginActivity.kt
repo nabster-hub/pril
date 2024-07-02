@@ -51,10 +51,20 @@ class LoginActivity : AppCompatActivity() {
                         override fun onTokenReceived(token: String?) {
                             runOnUiThread {
                                 if (token != null) {
-                                    tokenManager.saveToken(token)
-                                    var newToken = tokenManager.getToken();
-                                    println(newToken)
-                                    navigateToMain()
+                                    try{
+                                        tokenManager.saveToken(token)
+                                        var newToken = tokenManager.getToken();
+                                        println(newToken)
+                                        navigateToMain()
+                                    } catch (e: Exception){
+                                        println("Error saving token: ${e.message}")
+                                        Toast.makeText(
+                                            this@LoginActivity,
+                                            "Error saving token: ${e.message}",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }
+
                                 } else {
                                     Toast.makeText(this@LoginActivity, "Failed to retrieve token", Toast.LENGTH_LONG).show()
                                 }
