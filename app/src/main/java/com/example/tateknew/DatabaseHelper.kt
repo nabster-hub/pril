@@ -71,6 +71,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         db.execSQL(createObjectsTable)
         db.execSQL(createMtrsTable)
         db.execSQL(createAbonentsTable)
+        val cursor = db.rawQuery("SELECT sqlite_version()", null)
+        if (cursor.moveToFirst()) {
+            val sqliteVersion = cursor.getString(0)
+            Log.d("DatabaseHelper", "SQLite version: $sqliteVersion")
+        }
+        cursor.close()
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -165,9 +171,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     fun insertMtr(mtr: JSONObject) {
         val db = this.writableDatabase
+        Log.d("DatabaseManager", "abonent_id: ${mtr.getLong("abonent_id")}")
         val values = ContentValues().apply {
-            put("id", mtr.optInt("id"))
-            put("abonent_id", mtr.optInt("abonent_id"))
+            put("id", mtr.optLong("id"))
+            put("abonent_id", mtr.optLong("abonent_id"))
             put("nobj_id", mtr.optInt("nobj_id"))
             put("base_id", mtr.optInt("base_id"))
             put("name", mtr.optString("name"))
@@ -181,8 +188,9 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             put("created_at", mtr.optString("created_at"))
             put("updated_at", mtr.optString("updated_at"))
         }
+
         try {
-            val id = mtr.optInt("id")
+            val id = mtr.optLong("id")
             val cursor = db.query(TABLE_MTRS, arrayOf("id"), "id = ?", arrayOf(id.toString()), null, null, null)
             if (cursor.moveToFirst()) {
                 // Запись существует, обновляем её
@@ -205,11 +213,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     fun insertAbonent(abonent: JSONObject) {
         val db = this.writableDatabase
         val values = ContentValues().apply {
-            put("client_id", abonent.optInt("client_id"))
+            put("client_id", abonent.optLong("client_id"))
             put("ctt", abonent.optString("ctt"))
             put("ct", abonent.optInt("ct"))
             put("name", abonent.optString("name"))
-            put("client_no", abonent.optInt("client_no"))
+            put("client_no", abonent.optLong("client_no"))
             put("address", abonent.optString("address"))
             put("base_id", abonent.optInt("base_id"))
             put("client_gr", abonent.optString("client_gr"))
@@ -220,7 +228,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             put("updated_at", abonent.optString("updated_at"))
         }
         try {
-            val id = abonent.optInt("client_id")
+            val id = abonent.optLong("client_id")
             val cursor = db.query(TABLE_ABONENTS, arrayOf("client_id"), "client_id = ?", arrayOf(id.toString()), null, null, null)
             if (cursor.moveToFirst()) {
                 // Запись существует, обновляем её
