@@ -16,6 +16,8 @@ import androidx.lifecycle.lifecycleScope
 import com.example.tateknew.DatabaseHelper
 import com.example.tateknew.NetworkManager
 import com.example.tateknew.TokenManager
+import com.example.tateknew.data.AppDatabase
+import com.example.tateknew.data.Repository
 import com.example.tateknew.databinding.FragmentGetdataBinding
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -73,7 +75,9 @@ class getDataFragment : Fragment() {
 
     private fun getDatas() {
         loadingIndicator.visibility = View.VISIBLE
-        var dbHelper = DatabaseHelper(this.requireContext())
+        //var dbHelper = DatabaseHelper(this.requireContext())
+        val db = AppDatabase.getDatabase(this.requireContext())
+        val repository = Repository(db)
         val networkManager = NetworkManager()
         val token = TokenManager(this.requireContext()).getToken()
         val jsonObject = Gson().fromJson<JsonObject>(token, JsonObject::class.java)
@@ -81,7 +85,7 @@ class getDataFragment : Fragment() {
 
         lifecycleScope.launch{
             val success = withContext(Dispatchers.IO){
-                networkManager.getTasks(accessToken, dbHelper)
+                networkManager.getTasks(accessToken, repository)
             }
 
             loadingIndicator.visibility = View.GONE

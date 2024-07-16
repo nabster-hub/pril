@@ -1,6 +1,7 @@
 package com.example.tateknew
 
 import android.util.Log
+import com.example.tateknew.data.Repository
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -60,7 +61,7 @@ class NetworkManager {
 
     }
 
-    fun getTasks(token: String, dbHelper: DatabaseHelper): Boolean {
+    fun getTasks(token: String, repository: Repository): Boolean {
         return try {
             val client = OkHttpClient()
             val request = Request.Builder()
@@ -73,7 +74,7 @@ class NetworkManager {
                 val validJsonString = validateAndFixJson(tasks)
                 val jsonObject = JSONObject(validJsonString)
                 Log.d("Parsed JSON", jsonObject.toString())
-                parseTasks(jsonObject, dbHelper)
+                parseTasks(jsonObject, repository)
                 true
             } else {
                 println("Received empty response")
@@ -114,12 +115,12 @@ class NetworkManager {
 //        thread.start()
 //    }
 
-    private fun parseTasks(tasksObject: JSONObject, dbHelper: DatabaseHelper) {
+    private fun parseTasks(tasksObject: JSONObject, repository: Repository) {
         tasksObject.keys().forEach { key ->
             val objectsArray = tasksObject.getJSONArray(key)
             for (i in 0 until objectsArray.length()) {
                 val obj = objectsArray.getJSONObject(i)
-                dbHelper.insertObject(obj)
+                repository.insertObject(obj)
             }
         }
     }

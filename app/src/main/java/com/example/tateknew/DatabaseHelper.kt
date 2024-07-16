@@ -33,9 +33,9 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
         val createMtrsTable = """
             CREATE TABLE $TABLE_MTRS (
-                id INTEGER PRIMARY KEY,
-                abonent_id INTEGER,
-                nobj_id INTEGER,
+                id TEXT PRIMARY KEY,
+                abonent_id TEXT,
+                nobj_id TEXT,
                 base_id INTEGER,
                 name TEXT,
                 pu_name TEXT,
@@ -52,11 +52,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
         val createAbonentsTable = """
             CREATE TABLE $TABLE_ABONENTS (
-                client_id INTEGER PRIMARY KEY,
+                client_id TEXT PRIMARY KEY,
                 ctt TEXT,
                 ct INTEGER,
                 name TEXT,
-                client_no INTEGER,
+                client_no TEXT,
                 address TEXT,
                 base_id INTEGER,
                 client_gr TEXT,

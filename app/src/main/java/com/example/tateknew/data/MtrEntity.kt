@@ -1,9 +1,12 @@
-package com.example.tateknew.ui.getData
+package com.example.tateknew.data
 
 import android.system.Int64Ref
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-data class MtrItem(
-    val id: Int,
+@Entity(tableName = "mtrs")
+data class MtrEntity(
+    @PrimaryKey val id: Int,
     val abonentId: Int,
     val nobjId: Int,
     val baseId: Int,
