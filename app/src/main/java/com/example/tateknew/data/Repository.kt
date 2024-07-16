@@ -59,7 +59,7 @@ class Repository(private val db: AppDatabase) {
 
     fun insertAbonent(abonent: JSONObject) {
         val abonentEntity = AbonentEntity(
-            clientId = abonent.optInt("client_id"),
+            clientId = abonent.optLong("client_id"),
             ctt = abonent.optString("ctt"),
             ct = abonent.optInt("ct"),
             name = abonent.optString("name"),

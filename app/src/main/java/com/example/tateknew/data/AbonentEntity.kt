@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "abonents")
 data class AbonentEntity(
-    @PrimaryKey val clientId: Int,
+    @PrimaryKey val clientId: Long,
     val ctt: String,
     val ct: Int,
     val name: String,

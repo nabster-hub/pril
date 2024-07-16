@@ -5,9 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.tateknew.DatabaseHelper
+import com.example.tateknew.data.AppDatabase
 import com.example.tateknew.databinding.FragmentObjectDetailBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ObjectDetailFragment : Fragment() {
 
@@ -32,11 +36,35 @@ class ObjectDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val dbHelper = DatabaseHelper(requireContext())
-        val mtrs = dbHelper.getMtrsByObjectId(objectId)
+        val db = AppDatabase.getDatabase(requireContext())
 
-        val adapter = MtrAdapter(mtrs)
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        lifecycleScope.launch {
+            val mtrs = withContext(Dispatchers.IO) {
+                db.mtrDao().getMtrsByObjectId(objectId)
+            }
+
+            val mtrItems = mtrs.map { entity ->
+                MtrItem(
+                    id = entity.id,
+                    abonentId = entity.abonentId,
+                    nobjId = entity.nobjId,
+                    baseId = entity.baseId,
+                    name = entity.name,
+                    puName = entity.puName,
+                    itemNo = entity.itemNo,
+                    status = entity.status,
+                    ecapId = entity.ecapId,
+                    sredrashod = entity.sredrashod,
+                    vl = entity.vl,
+                    ktt = entity.ktt,
+                    createdAt = entity.createdAt,
+                    updatedAt = entity.updatedAt
+                )
+            }
+
+            val adapter = MtrAdapter(mtrItems)
+            binding.recyclerView.adapter = adapter
+            binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        }
     }
 }
