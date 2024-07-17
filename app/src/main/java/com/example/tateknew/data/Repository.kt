@@ -31,8 +31,8 @@ class Repository(private val db: AppDatabase) {
 
     fun insertMtr(mtr: JSONObject) {
         val mtrEntity = MtrEntity(
-            id = mtr.optInt("id"),
-            abonentId = mtr.optInt("abonent_id"),
+            id = mtr.optLong("id"),
+            abonentId = mtr.optLong("abonent_id"),
             nobjId = mtr.optInt("nobj_id"),
             baseId = mtr.optInt("base_id"),
             name = mtr.optString("name"),

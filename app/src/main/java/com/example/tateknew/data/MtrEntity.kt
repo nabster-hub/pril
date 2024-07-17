@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "mtrs")
 data class MtrEntity(
-    @PrimaryKey val id: Int,
-    val abonentId: Int,
+    @PrimaryKey val id: Long,
+    val abonentId: Long,
     val nobjId: Int,
     val baseId: Int,
     val name: String,

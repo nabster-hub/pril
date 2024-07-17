@@ -1,10 +1,8 @@
 package com.example.tateknew.ui.getData
 
-import android.system.Int64Ref
-
 data class MtrItem(
-    val id: Int,
-    val abonentId: Int,
+    val id: Long,
+    val abonentId: Long,
     val nobjId: Int,
     val baseId: Int,
     val name: String,

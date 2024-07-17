@@ -114,8 +114,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         if (cursor.moveToFirst()) {
             do {
                 val mtrItem = MtrItem(
-                    id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
-                    abonentId = cursor.getInt(cursor.getColumnIndexOrThrow("abonent_id")),
+                    id = cursor.getLong(cursor.getColumnIndexOrThrow("id")),
+                    abonentId = cursor.getLong(cursor.getColumnIndexOrThrow("abonent_id")),
                     nobjId = cursor.getInt(cursor.getColumnIndexOrThrow("nobj_id")),
                     baseId = cursor.getInt(cursor.getColumnIndexOrThrow("base_id")),
                     name = cursor.getString(cursor.getColumnIndexOrThrow("name")),
