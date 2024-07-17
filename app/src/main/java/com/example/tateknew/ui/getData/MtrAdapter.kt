@@ -22,7 +22,7 @@ class MtrAdapter(
 
     override fun onBindViewHolder(holder: MtrViewHolder, position: Int) {
         val item = mtrs[position]
-        holder.nameTextView.text = item.name
+        holder.nameTextView.text = item.id.toString()
     }
 
     override fun getItemCount() = mtrs.size

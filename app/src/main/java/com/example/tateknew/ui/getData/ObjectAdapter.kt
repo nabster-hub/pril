@@ -6,10 +6,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tateknew.R
+import com.example.tateknew.data.ObjectEntity
 
 class ObjectAdapter(
-    private val objects: List<ObjectItem>,
-    private val onItemClick: (ObjectItem) -> Unit
+    private var objects: List<ObjectEntity>,
+    private val onItemClick: (ObjectEntity) -> Unit
 ) : RecyclerView.Adapter<ObjectAdapter.ObjectViewHolder>() {
 
     class ObjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -28,4 +29,9 @@ class ObjectAdapter(
     }
 
     override fun getItemCount() = objects.size
+
+    fun updateData(newObjects: List<ObjectEntity>) {
+        objects = newObjects
+        notifyDataSetChanged()
+    }
 }

@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.tateknew.DatabaseHelper
+import com.example.tateknew.data.ObjectEntity
 import com.example.tateknew.databinding.FragmentObjectListBinding
 
 class ObjectListFragment : Fragment() {
@@ -17,6 +18,7 @@ class ObjectListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var objectAdapter: ObjectAdapter
+    private lateinit var objectListViewModel: ObjectListViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,10 +27,7 @@ class ObjectListFragment : Fragment() {
         _binding = FragmentObjectListBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val dbHelper = DatabaseHelper(requireContext())
-        val objects = dbHelper.getAllObjects()
-
-        objectAdapter = ObjectAdapter(objects) { objectItem ->
+        objectAdapter = ObjectAdapter(emptyList()) { objectItem ->
             val action = ObjectListFragmentDirections.actionObjectListFragmentToObjectDetailFragment(objectItem.id)
             findNavController().navigate(action)
         }
@@ -38,7 +37,17 @@ class ObjectListFragment : Fragment() {
             adapter = objectAdapter
         }
 
+        objectListViewModel = ViewModelProvider(this).get(ObjectListViewModel::class.java)
+
+        objectListViewModel.allObjects.observe(viewLifecycleOwner, Observer { objects ->
+            objects?.let { updateUI(it) }
+        })
+
         return root
+    }
+
+    private fun updateUI(objects: List<ObjectEntity>) {
+        objectAdapter.updateData(objects)
     }
 
     override fun onDestroyView() {

@@ -40,7 +40,8 @@ class ObjectDetailFragment : Fragment() {
 
         lifecycleScope.launch {
             val mtrs = withContext(Dispatchers.IO) {
-                db.mtrDao().getMtrsByObjectId(objectId)
+                //db.mtrDao().getMtrsByObjectId(objectId)
+                db.mtrDao().getAbonents(objectId)
             }
 
             val mtrItems = mtrs.map { entity ->

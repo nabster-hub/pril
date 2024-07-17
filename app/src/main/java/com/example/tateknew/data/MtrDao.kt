@@ -9,4 +9,7 @@ interface MtrDao {
 
     @Query("SELECT * FROM mtrs WHERE nobjId = :objectId")
     fun getMtrsByObjectId(objectId: Int): List<MtrEntity>
+
+    @Query("SELECT mtrs.*, abonents.* FROM mtrs JOIN abonents ON mtrs.abonentId = abonents.clientId WHERE mtrs.nobjId = :objectId")
+    fun getAbonents(objectId: Int): List<MtrEntity>
 }
