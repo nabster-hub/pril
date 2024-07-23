@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tateknew.data.AppDatabase
+import com.example.tateknew.data.MtrWithAbonent
 import com.example.tateknew.databinding.FragmentObjectDetailBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,7 +46,7 @@ class ObjectDetailFragment : Fragment() {
             }
 
             val mtrItems = mtrs.map { entity ->
-                MtrItem(
+                MtrWithAbonent(
                     id = entity.id,
                     abonentId = entity.abonentId,
                     nobjId = entity.nobjId,
@@ -59,7 +60,20 @@ class ObjectDetailFragment : Fragment() {
                     vl = entity.vl,
                     ktt = entity.ktt,
                     createdAt = entity.createdAt,
-                    updatedAt = entity.updatedAt
+                    updatedAt = entity.updatedAt,
+                    clientId = entity.clientId,
+                    ctt = entity.ctt,
+                    ct = entity.ct,
+                    abonentName = entity.abonentName,
+                    clientNo = entity.clientNo,
+                    address = entity.address,
+                    abonentBaseId = entity.abonentBaseId,
+                    clientGr = entity.clientGr,
+                    street = entity.street,
+                    home = entity.home,
+                    flat = entity.flat,
+                    abonentCreatedAt = entity.abonentCreatedAt,
+                    abonentUpdatedAt = entity.abonentUpdatedAt,
                 )
             }
 
