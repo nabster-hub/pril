@@ -7,14 +7,14 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/mtrName"
+        android:id="@+id/name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Mtr Name"
-        android:textSize="18sp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="16sp"
+        android:text="MTR Name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 

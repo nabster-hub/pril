@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ObjectDetailFragment : Fragment() {
+class ObjectDetailFragment : Fragment(), OnAbonentClickListener {
 
     private var objectId: Int = 0
     private lateinit var binding: FragmentObjectDetailBinding
@@ -40,46 +40,36 @@ class ObjectDetailFragment : Fragment() {
         val db = AppDatabase.getDatabase(requireContext())
 
         lifecycleScope.launch {
-            val mtrs = withContext(Dispatchers.IO) {
-                //db.mtrDao().getMtrsByObjectId(objectId)
+            val mtrsWithAbonents = withContext(Dispatchers.IO) {
                 db.mtrDao().getAbonents(objectId)
             }
 
-            val mtrItems = mtrs.map { entity ->
-                MtrWithAbonent(
-                    id = entity.id,
-                    abonentId = entity.abonentId,
-                    nobjId = entity.nobjId,
-                    baseId = entity.baseId,
-                    name = entity.name,
-                    puName = entity.puName,
-                    itemNo = entity.itemNo,
-                    status = entity.status,
-                    ecapId = entity.ecapId,
-                    sredrashod = entity.sredrashod,
-                    vl = entity.vl,
-                    ktt = entity.ktt,
-                    createdAt = entity.createdAt,
-                    updatedAt = entity.updatedAt,
-                    clientId = entity.clientId,
-                    ctt = entity.ctt,
-                    ct = entity.ct,
-                    abonentName = entity.abonentName,
-                    clientNo = entity.clientNo,
-                    address = entity.address,
-                    abonentBaseId = entity.abonentBaseId,
-                    clientGr = entity.clientGr,
-                    street = entity.street,
-                    home = entity.home,
-                    flat = entity.flat,
-                    abonentCreatedAt = entity.abonentCreatedAt,
-                    abonentUpdatedAt = entity.abonentUpdatedAt,
-                )
-            }
-
-            val adapter = MtrAdapter(mtrItems)
+            val adapter = MtrAdapter(mtrsWithAbonents, this@ObjectDetailFragment)
             binding.recyclerView.adapter = adapter
             binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        }
+    }
+
+    override fun onAbonentClick(abonentId: Long) {
+        val db = AppDatabase.getDatabase(requireContext())
+
+        lifecycleScope.launch {
+            val mtrs = withContext(Dispatchers.IO) {
+                db.mtrDao().getMtrsByAbonentId(abonentId)
+            }
+
+            val mtrItems = withContext(Dispatchers.IO) {
+                mtrs.map { entity ->
+                    val abonent = db.abonentDao().getAbonentById(entity.abonentId)
+                    MtrWithAbonent(
+                        mtr = entity,
+                        abonent = abonent
+                    )
+                }
+            }
+
+            val adapter = MtrAdapter(mtrItems, this@ObjectDetailFragment)
+            binding.recyclerView.adapter = adapter
         }
     }
 }

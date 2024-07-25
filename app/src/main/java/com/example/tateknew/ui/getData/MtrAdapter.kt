@@ -1,30 +1,34 @@
 package com.example.tateknew.ui.getData
 
-import com.example.tateknew.data.MtrWithAbonent
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.tateknew.R
+import com.example.tateknew.data.MtrWithAbonent
+import com.example.tateknew.databinding.ItemMtrBinding
 
 class MtrAdapter(
-    private val mtrs: List<MtrWithAbonent>
+    private val mtrItems: List<MtrWithAbonent>,
+    private val clickListener: OnAbonentClickListener
 ) : RecyclerView.Adapter<MtrAdapter.MtrViewHolder>() {
 
-    class MtrViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val nameTextView: TextView = itemView.findViewById(R.id.mtrName)
+    inner class MtrViewHolder(val binding: ItemMtrBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: MtrWithAbonent) {
+            binding.name.text = item.abonent.address
+            binding.root.setOnClickListener {
+                clickListener.onAbonentClick(item.abonent.clientId)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MtrViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_mtr, parent, false)
-        return MtrViewHolder(view)
+        val binding = ItemMtrBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return MtrViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: MtrViewHolder, position: Int) {
-        val item = mtrs[position]
-        holder.nameTextView.text = item.address
+        holder.bind(mtrItems[position])
     }
 
-    override fun getItemCount() = mtrs.size
+    override fun getItemCount() = mtrItems.size
 }

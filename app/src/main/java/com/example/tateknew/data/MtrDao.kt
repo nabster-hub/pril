@@ -14,23 +14,26 @@ interface MtrDao {
     fun getMtrsByObjectId(objectId: Int): List<MtrEntity>
 
     @Query("""
-        SELECT mtrs.*, 
-               abonents.clientId, 
-               abonents.ctt, 
-               abonents.ct, 
-               abonents.name AS abonentName, 
-               abonents.clientNo, 
-               abonents.address, 
-               abonents.baseId AS abonentBaseId, 
-               abonents.clientGr, 
-               abonents.street, 
-               abonents.home, 
-               abonents.flat, 
-               abonents.createdAt AS abonentCreatedAt, 
-               abonents.updatedAt AS abonentUpdatedAt 
+            SELECT mtrs.*, 
+               abonents.clientId AS abonent_clientId, 
+               abonents.ctt AS abonent_ctt, 
+               abonents.ct AS abonent_ct, 
+               abonents.name AS abonent_name, 
+               abonents.clientNo AS abonent_clientNo, 
+               abonents.address AS abonent_address, 
+               abonents.baseId AS abonent_baseId, 
+               abonents.clientGr AS abonent_clientGr, 
+               abonents.street AS abonent_street, 
+               abonents.home AS abonent_home, 
+               abonents.flat AS abonent_flat, 
+               abonents.createdAt AS abonent_createdAt, 
+               abonents.updatedAt AS abonent_updatedAt 
         FROM mtrs 
         JOIN abonents ON mtrs.abonentId = abonents.clientId 
         WHERE mtrs.nobjId = :objectId
     """)
     fun getAbonents(objectId: Int): List<MtrWithAbonent>
+
+    @Query("SELECT * FROM mtrs WHERE abonentId = :abonentId")
+    fun getMtrsByAbonentId(abonentId: Long): List<MtrEntity>
 }
