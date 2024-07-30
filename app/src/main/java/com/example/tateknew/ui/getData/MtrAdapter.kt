@@ -14,7 +14,7 @@ class MtrAdapter(
 
     inner class MtrViewHolder(val binding: ItemMtrBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: MtrWithAbonent) {
-            binding.name.text = item.abonent.address
+            binding.name.text = "Лицевой №:  ${item.abonent.clientNo}, Адрес: ${item.abonent.address} "
             binding.root.setOnClickListener {
                 clickListener.onAbonentClick(item.abonent.clientId)
             }

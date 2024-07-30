@@ -30,7 +30,7 @@ interface MtrDao {
                abonents.updatedAt AS abonent_updatedAt 
         FROM mtrs 
         JOIN abonents ON mtrs.abonentId = abonents.clientId 
-        WHERE mtrs.nobjId = :objectId
+        WHERE mtrs.nobjId = :objectId GROUP BY mtrs.abonentId order by abonent_clientNo
     """)
     fun getAbonents(objectId: Int): List<MtrWithAbonent>
 

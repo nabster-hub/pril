@@ -10,7 +10,7 @@
         android:id="@+id/objectDetailTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Object Details"
+        android:text="Абоненты лицевые счета и адреса"
         android:textSize="24sp"
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toTopOf="parent"
