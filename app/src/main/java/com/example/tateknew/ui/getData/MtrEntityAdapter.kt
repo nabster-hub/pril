@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tateknew.data.MtrEntity
-import com.example.tateknew.databinding.ItemMtrDetailBinding
+import com.example.tateknew.databinding.ItemMtrBinding
 
 class MtrEntityAdapter(private val mtrItems: List<MtrEntity>) : RecyclerView.Adapter<MtrEntityAdapter.MtrEntityViewHolder>() {
 
-    inner class MtrEntityViewHolder(val binding: ItemMtrDetailBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MtrEntityViewHolder(val binding: ItemMtrBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: MtrEntity) {
             binding.name.text = item.name
             // Другие поля можно заполнить здесь
@@ -17,7 +17,7 @@ class MtrEntityAdapter(private val mtrItems: List<MtrEntity>) : RecyclerView.Ada
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MtrEntityViewHolder {
-        val binding = ItemMtrDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemMtrBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MtrEntityViewHolder(binding)
     }
 

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tateknew.data.AppDatabase
 import com.example.tateknew.data.MtrWithAbonent
@@ -51,25 +52,27 @@ class ObjectDetailFragment : Fragment(), OnAbonentClickListener {
     }
 
     override fun onAbonentClick(abonentId: Long) {
-        val db = AppDatabase.getDatabase(requireContext())
-
-        lifecycleScope.launch {
-            val mtrs = withContext(Dispatchers.IO) {
-                db.mtrDao().getMtrsByAbonentId(abonentId)
-            }
-
-            val mtrItems = withContext(Dispatchers.IO) {
-                mtrs.map { entity ->
-                    val abonent = db.abonentDao().getAbonentById(entity.abonentId)
-                    MtrWithAbonent(
-                        mtr = entity,
-                        abonent = abonent
-                    )
-                }
-            }
-
-            val adapter = MtrAdapter(mtrItems, this@ObjectDetailFragment)
-            binding.recyclerView.adapter = adapter
-        }
+        val action = ObjectDetailFragmentDirections.actionObjectDetailFragmentToMtrDetailFragment(abonentId)
+        findNavController().navigate(action)
+//        val db = AppDatabase.getDatabase(requireContext())
+//
+//        lifecycleScope.launch {
+//            val mtrs = withContext(Dispatchers.IO) {
+//                db.mtrDao().getMtrsByAbonentId(abonentId)
+//            }
+//
+//            val mtrItems = withContext(Dispatchers.IO) {
+//                mtrs.map { entity ->
+//                    val abonent = db.abonentDao().getAbonentById(entity.abonentId)
+//                    MtrWithAbonent(
+//                        mtr = entity,
+//                        abonent = abonent
+//                    )
+//                }
+//            }
+//
+//            val adapter = MtrAdapter(mtrItems, this@ObjectDetailFragment)
+//            binding.recyclerView.adapter = adapter
+//        }
     }
 }
