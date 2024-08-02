@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tateknew.data.AppDatabase
 import com.example.tateknew.data.MtrWithAbonent
@@ -20,6 +23,7 @@ class AbonentsFragment : Fragment(), OnAbonentClickListener {
 
     private var objectId: Int = 0
     private lateinit var binding: FragmentAbonentsDetailBinding
+    private lateinit var abonentsViewModel: AbonentsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +35,7 @@ class AbonentsFragment : Fragment(), OnAbonentClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAbonentsDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -39,22 +43,23 @@ class AbonentsFragment : Fragment(), OnAbonentClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val db = AppDatabase.getDatabase(requireContext())
+        abonentsViewModel = ViewModelProvider(this).get(AbonentsViewModel::class.java)
+        abonentsViewModel.loadAbonents(objectId)
 
-        lifecycleScope.launch {
-            val mtrsWithAbonents = withContext(Dispatchers.IO) {
-                db.mtrDao().getAbonents(objectId)
-            }
-
-            val adapter = MtrAdapter(mtrsWithAbonents, this@AbonentsFragment)
+        abonentsViewModel.abonents.observe(viewLifecycleOwner) { abonents ->
+            val adapter = MtrAdapter(abonents, this@AbonentsFragment)
             binding.recyclerView.adapter = adapter
             binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().popBackStack()
+            }
+        })
     }
 
     override fun onAbonentClick(abonentId: Long) {
-//        val action = ObjectDetailFragmentDirections.actionObjectDetailFragmentToMtrDetailFragment(abonentId)
-//        findNavController().navigate(action)
         val db = AppDatabase.getDatabase(requireContext())
 
         lifecycleScope.launch {
@@ -75,5 +80,10 @@ class AbonentsFragment : Fragment(), OnAbonentClickListener {
             val adapter = MtrAdapter(mtrItems, this@AbonentsFragment)
             binding.recyclerView.adapter = adapter
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.recyclerView.adapter = null
     }
 }

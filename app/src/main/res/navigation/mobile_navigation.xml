@@ -26,7 +26,9 @@
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim">
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/TPsFragment"
+            app:popUpToInclusive="false">
         </action>
     </fragment>
 
@@ -35,6 +37,11 @@
         android:name="com.example.tateknew.ui.Abonents.AbonentsFragment"
         android:label="Abonents"
         tools:layout="@layout/fragment_abonents_detail">
+        <action
+            android:id="@+id/action_abonentsFragment_to_mtrFragment"
+            app:destination="@id/mtrDetailFragment"
+            app:popUpTo="@id/abonentsFragment"
+            app:popUpToInclusive="false" />
         <argument
             android:name="objectId"
             app:argType="integer" />
@@ -50,7 +57,7 @@
 
     <fragment
         android:id="@+id/mtrDetailFragment"
-        android:name="com.example.tateknew.ui.getData.MtrDetailFragment"
+        android:name="com.example.tateknew.ui.MTR.MTRFragment"
         android:label="Mtr Detail">
         <argument
             android:name="abonentId"
