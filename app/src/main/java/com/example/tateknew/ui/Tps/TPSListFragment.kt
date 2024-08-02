@@ -1,6 +1,7 @@
-package com.example.tateknew.ui.getData
+package com.example.tateknew.ui.Tps
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,16 +10,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.tateknew.data.ObjectEntity
+import com.example.tateknew.data.TpsEntity
 import com.example.tateknew.databinding.FragmentObjectListBinding
 
-class ObjectListFragment : Fragment() {
+class TPSListFragment : Fragment() {
 
     private var _binding: FragmentObjectListBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var objectAdapter: ObjectAdapter
-    private lateinit var objectListViewModel: ObjectListViewModel
+    private lateinit var tpsAdapter: TPsAdapter
+    private lateinit var tpsViewModel: TPsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,27 +28,32 @@ class ObjectListFragment : Fragment() {
         _binding = FragmentObjectListBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        objectAdapter = ObjectAdapter(emptyList()) { objectItem ->
-            val action = ObjectListFragmentDirections.actionObjectListFragmentToObjectDetailFragment(objectItem.id)
+        tpsAdapter = TPsAdapter(emptyList()) { objectItem ->
+            val action = TPSListFragmentDirections.actionTPSListFragmentToAbonentsFragment(objectItem.id)
             findNavController().navigate(action)
         }
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = objectAdapter
+            adapter = tpsAdapter
         }
-
-        objectListViewModel = ViewModelProvider(this).get(ObjectListViewModel::class.java)
-
-        objectListViewModel.allObjects.observe(viewLifecycleOwner, Observer { objects ->
-            objects?.let { updateUI(it) }
-        })
 
         return root
     }
 
-    private fun updateUI(objects: List<ObjectEntity>) {
-        objectAdapter.updateData(objects)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Initialize ViewModel and observe data in onViewCreated
+        tpsViewModel = ViewModelProvider(this).get(TPsViewModel::class.java)
+
+        tpsViewModel.allObjects.observe(viewLifecycleOwner, Observer { objects ->
+            objects?.let { updateUI(it) }
+        })
+    }
+
+    private fun updateUI(objects: List<TpsEntity>) {
+        tpsAdapter.updateData(objects)
     }
 
     override fun onDestroyView() {

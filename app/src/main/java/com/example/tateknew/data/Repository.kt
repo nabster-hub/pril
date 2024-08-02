@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 class Repository(private val db: AppDatabase) {
 
     fun insertObject(obj: JSONObject) {
-        val objectEntity = ObjectEntity(
+        val tpsEntity = TpsEntity(
             id = obj.optInt("id"),
             name = obj.optString("name"),
             baseId = obj.optInt("base_id"),
@@ -18,7 +18,7 @@ class Repository(private val db: AppDatabase) {
         )
 
         CoroutineScope(Dispatchers.IO).launch {
-            db.objectDao().insertObject(objectEntity)
+            db.objectDao().insertObject(tpsEntity)
 
             val mtrsArray = obj.optJSONArray("mtrs")
             if (mtrsArray != null) {

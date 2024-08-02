@@ -1,4 +1,4 @@
-package com.example.tateknew.ui.getData
+package com.example.tateknew.ui.Tps
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,12 +6,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tateknew.R
-import com.example.tateknew.data.ObjectEntity
+import com.example.tateknew.data.TpsEntity
 
-class ObjectAdapter(
-    private var objects: List<ObjectEntity>,
-    private val onItemClick: (ObjectEntity) -> Unit
-) : RecyclerView.Adapter<ObjectAdapter.ObjectViewHolder>() {
+class TPsAdapter(
+    private var objects: List<TpsEntity>,
+    private val onItemClick: (TpsEntity) -> Unit
+) : RecyclerView.Adapter<TPsAdapter.ObjectViewHolder>() {
 
     class ObjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.objectName)
@@ -30,7 +30,7 @@ class ObjectAdapter(
 
     override fun getItemCount() = objects.size
 
-    fun updateData(newObjects: List<ObjectEntity>) {
+    fun updateData(newObjects: List<TpsEntity>) {
         objects = newObjects
         notifyDataSetChanged()
     }

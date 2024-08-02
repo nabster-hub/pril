@@ -13,7 +13,7 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/menu_getdata" />
         <item
-            android:id="@+id/objectListFragment"
+            android:id="@+id/TPsFragment"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Object List" />
         <item

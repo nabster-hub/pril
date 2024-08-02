@@ -1,6 +1,6 @@
-package com.example.tateknew.ui.getData
+package com.example.tateknew.ui.Tps
 
-data class ObjectItem(
+data class TPsItem(
     val id: Int,
     val name: String,
     val baseId: Int,
