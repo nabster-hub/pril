@@ -9,29 +9,29 @@ import com.example.tateknew.R
 import com.example.tateknew.data.TpsEntity
 
 class TPsAdapter(
-    private var objects: List<TpsEntity>,
+    private var tps: List<TpsEntity>,
     private val onItemClick: (TpsEntity) -> Unit
 ) : RecyclerView.Adapter<TPsAdapter.ObjectViewHolder>() {
 
     class ObjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val nameTextView: TextView = itemView.findViewById(R.id.objectName)
+        val nameTextView: TextView = itemView.findViewById(R.id.tpsName)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ObjectViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_object, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_tps, parent, false)
         return ObjectViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ObjectViewHolder, position: Int) {
-        val item = objects[position]
+        val item = tps[position]
         holder.nameTextView.text = item.name
         holder.itemView.setOnClickListener { onItemClick(item) }
     }
 
-    override fun getItemCount() = objects.size
+    override fun getItemCount() = tps.size
 
     fun updateData(newObjects: List<TpsEntity>) {
-        objects = newObjects
+        tps = newObjects
         notifyDataSetChanged()
     }
 }

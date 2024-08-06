@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tateknew.data.AppDatabase
 import com.example.tateknew.data.MtrWithAbonent
 import com.example.tateknew.databinding.FragmentAbonentsDetailBinding
-import com.example.tateknew.ui.getData.MtrAdapter
+import com.example.tateknew.ui.MTR.MtrAdapter
 import com.example.tateknew.ui.getData.OnAbonentClickListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,7 +47,7 @@ class AbonentsFragment : Fragment(), OnAbonentClickListener {
         abonentsViewModel.loadAbonents(objectId)
 
         abonentsViewModel.abonents.observe(viewLifecycleOwner) { abonents ->
-            val adapter = MtrAdapter(abonents, this@AbonentsFragment)
+            val adapter = AbonentAdapter(abonents, this@AbonentsFragment)
             binding.recyclerView.adapter = adapter
             binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
@@ -77,7 +77,12 @@ class AbonentsFragment : Fragment(), OnAbonentClickListener {
                 }
             }
 
-            val adapter = MtrAdapter(mtrItems, this@AbonentsFragment)
+            val adapter = MtrAdapter(mtrItems, object : OnAbonentClickListener {
+                override fun onAbonentClick(mtrId: Long) {
+                    val action = AbonentsFragmentDirections.actionAbonentsFragmentToMtrFragment(mtrId)
+                    findNavController().navigate(action)
+                }
+            })
             binding.recyclerView.adapter = adapter
         }
     }

@@ -7,10 +7,10 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/objectName"
+        android:id="@+id/tpsName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Object Name"
+        android:text="TPS Name"
         android:textSize="18sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
