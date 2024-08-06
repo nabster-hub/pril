@@ -46,12 +46,13 @@ class AbonentsFragment : Fragment(), OnAbonentClickListener {
         abonentsViewModel = ViewModelProvider(this).get(AbonentsViewModel::class.java)
         abonentsViewModel.loadAbonents(objectId)
 
-        abonentsViewModel.abonents.observe(viewLifecycleOwner) { abonents ->
-            val adapter = AbonentAdapter(abonents, this@AbonentsFragment)
-            binding.recyclerView.adapter = adapter
-            binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        }
+        val adapter = AbonentAdapter(emptyList(), this@AbonentsFragment)
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        abonentsViewModel.abonents.observe(viewLifecycleOwner) { abonents ->
+            adapter.updateData(abonents)
+        }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 findNavController().popBackStack()

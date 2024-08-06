@@ -8,7 +8,7 @@ import com.example.tateknew.databinding.ItemAbonentsBinding
 import com.example.tateknew.ui.getData.OnAbonentClickListener
 
 class AbonentAdapter(
-    private val mtrItems: List<MtrWithAbonent>,
+    private var mtrItems: List<MtrWithAbonent>,
     private val clickListener: OnAbonentClickListener
 ) : RecyclerView.Adapter<AbonentAdapter.AbonentViewHolder>() {
 
@@ -31,7 +31,9 @@ class AbonentAdapter(
     }
 
     override fun getItemCount() = mtrItems.size
-    fun setOnItemClickListener(any: Any) {
 
+    fun updateData(newItems: List<MtrWithAbonent>) {
+        mtrItems = newItems
+        notifyDataSetChanged()
     }
 }
