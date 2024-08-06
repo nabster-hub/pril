@@ -12,12 +12,22 @@ import com.example.tateknew.ui.getData.OnAbonentClickListener
 class MtrAdapter(private val mtrs: List<MtrWithAbonent>, private val listener: OnAbonentClickListener) :
     RecyclerView.Adapter<MtrAdapter.MtrViewHolder>() {
 
+    private var onItemClickListener: ((MtrWithAbonent) -> Unit)? = null
+
+    fun setOnItemClickListener(listener: (MtrWithAbonent) -> Unit) {
+        onItemClickListener = listener
+    }
+
     inner class MtrViewHolder(val binding: ItemMtrBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             itemView.setOnClickListener {
                 val mtr = mtrs[adapterPosition]
                 listener.onAbonentClick(mtr.mtr.id)
+                onItemClickListener?.invoke(mtr)
             }
+        }
+        fun bind(item: MtrWithAbonent) {
+            binding.name.text = "Наименование МТР: ${item.mtr.name}, номер: ${item.mtr.itemNo}"
         }
     }
 
@@ -27,10 +37,7 @@ class MtrAdapter(private val mtrs: List<MtrWithAbonent>, private val listener: O
     }
 
     override fun onBindViewHolder(holder: MtrViewHolder, position: Int) {
-        val mtrWithAbonent = mtrs[position]
-        println(mtrWithAbonent.mtr.id)
-        // Bind data to your views here
-        holder.binding.name.text = "Наименование МТР: ${mtrWithAbonent.mtr.name}, номер: ${mtrWithAbonent.mtr.itemNo}"
+        holder.bind(mtrs[position])
     }
 
     override fun getItemCount() = mtrs.size
