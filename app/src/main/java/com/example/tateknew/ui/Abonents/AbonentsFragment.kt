@@ -78,13 +78,13 @@ class AbonentsFragment : Fragment(), OnAbonentClickListener {
                 }
             }
 
-            val adapter = MtrAdapter(mtrItems, object : OnAbonentClickListener {
-                override fun onAbonentClick(mtrId: Long) {
-                    val action = AbonentsFragmentDirections.actionAbonentsFragmentToMtrFragment(mtrId)
-                    findNavController().navigate(action)
-                }
-            })
+            val adapter = AbonentAdapter(mtrItems, this@AbonentsFragment)
             binding.recyclerView.adapter = adapter
+
+            (binding.recyclerView.adapter as? MtrAdapter)?.setOnItemClickListener { mtrWithAbonent ->
+                val action = AbonentsFragmentDirections.actionAbonentsFragmentToMtrFragment(mtrId = mtrWithAbonent.mtr.id)
+                findNavController().navigate(action)
+            }
         }
     }
 

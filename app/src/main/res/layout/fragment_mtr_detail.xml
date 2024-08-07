@@ -1,20 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.MTR.MtrDetailFragment">
 
-    <data>
+    <TextView
+        android:id="@+id/tvMeterType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Meter Type"
+        android:textSize="18sp" />
 
-        <variable
-            name="viewModel"
-            type="com.example.tateknew.ui.getData.MtrDetailViewModel" />
-    </data>
+    <TextView
+        android:id="@+id/tvMeterNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Meter Number"
+        android:textSize="18sp" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <Spinner
+        android:id="@+id/spinnerSituation"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.getData.MtrDetailFragment">
+        android:layout_height="wrap_content"
+        android:entries="@array/situation_array" />
 
-        <!-- Добавьте ваши виджеты здесь -->
+    <EditText
+        android:id="@+id/etCurrentReading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint="Current Reading" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+    <Button
+        android:id="@+id/btnTakePhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Take Photo" />
+
+    <ImageView
+        android:id="@+id/ivPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:contentDescription="Photo" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button" />
+
+</LinearLayout>
