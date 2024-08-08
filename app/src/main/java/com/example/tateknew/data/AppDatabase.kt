@@ -5,9 +5,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import android.content.Context
 
-@Database(entities = [ObjectEntity::class, MtrEntity::class, AbonentEntity::class], version = 1)
+@Database(entities = [TpsEntity::class, MtrEntity::class, AbonentEntity::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun objectDao(): ObjectDao
+    abstract fun objectDao(): TpsDao
     abstract fun mtrDao(): MtrDao
     abstract fun abonentDao(): AbonentDao
 

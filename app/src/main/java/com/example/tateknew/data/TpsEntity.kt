@@ -3,8 +3,8 @@ package com.example.tateknew.data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "objects")
-data class ObjectEntity(
+@Entity(tableName = "Tps")
+data class TpsEntity(
     @PrimaryKey val id: Int,
     val name: String,
     val baseId: Int,

@@ -16,27 +16,58 @@
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
     <fragment
-        android:id="@+id/objectListFragment"
-        android:name="com.example.tateknew.ui.getData.ObjectListFragment"
+        android:id="@+id/TPsFragment"
+        android:name="com.example.tateknew.ui.Tps.TPSListFragment"
         android:label="Object List"
         tools:layout="@layout/fragment_object_list">
         <action
-            android:id="@+id/action_objectListFragment_to_objectDetailFragment"
-            app:destination="@id/objectDetailFragment"
+            android:id="@+id/action_TPSListFragment_to_AbonentsFragment"
+            app:destination="@id/abonentsFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/TPsFragment"
+            app:popUpToInclusive="false">
+        </action>
     </fragment>
 
     <fragment
-        android:id="@+id/objectDetailFragment"
-        android:name="com.example.tateknew.ui.getData.ObjectDetailFragment"
-        android:label="Object Detail"
-        tools:layout="@layout/fragment_object_detail">
+        android:id="@+id/abonentsFragment"
+        android:name="com.example.tateknew.ui.Abonents.AbonentsFragment"
+        android:label="Abonents"
+        tools:layout="@layout/fragment_abonents_detail">
+        <action
+            android:id="@+id/action_abonentsFragment_to_mtrFragment"
+            app:destination="@id/mtrFragment"
+            app:popUpTo="@id/abonentsFragment"
+            app:popUpToInclusive="false" />
         <argument
             android:name="objectId"
             app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/mtrFragment"
+        android:name="com.example.tateknew.ui.MTR.MTRFragment"
+        android:label="MTR Fragment"
+        tools:layout="@layout/fragment_mtr">
+        <action
+            android:id="@+id/action_mtrFragment_to_mtrDetailFragment"
+            app:destination="@id/mtrDetailFragment"
+            app:popUpTo="@id/mtrFragment"
+            app:popUpToInclusive="false" />
+        <argument
+            android:name="mtrId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/mtrDetailFragment"
+        android:name="com.example.tateknew.ui.MTR.MtrDetailFragment"
+        android:label="Mtr Detail"
+        tools:layout="@layout/fragment_mtr_detail">
+        <argument
+            android:name="mtrId"
+            app:argType="long" />
     </fragment>
 
     <fragment
