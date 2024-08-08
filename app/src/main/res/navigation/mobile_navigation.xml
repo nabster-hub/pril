@@ -48,31 +48,23 @@
     </fragment>
     <fragment
         android:id="@+id/mtrFragment"
-        android:name="com.example.tateknew.ui.Abonents.AbonentsFragment"
-        android:label="Abonents"
-        tools:layout="@layout/fragment_abonents_detail">
+        android:name="com.example.tateknew.ui.MTR.MTRFragment"
+        android:label="MTR Fragment"
+        tools:layout="@layout/fragment_mtr">
         <action
-            android:id="@+id/action_abonentsFragment_to_mtrFragment"
+            android:id="@+id/action_mtrFragment_to_mtrDetailFragment"
             app:destination="@id/mtrDetailFragment"
-            app:popUpTo="@id/abonentsFragment"
+            app:popUpTo="@id/mtrFragment"
             app:popUpToInclusive="false" />
         <argument
             android:name="mtrId"
             app:argType="long" />
     </fragment>
-<!--    <fragment-->
-<!--        android:id="@+id/objectDetailFragment"-->
-<!--        android:name="com.example.tateknew.ui.getData.ObjectDetailFragment"-->
-<!--        android:label="Object Detail">-->
-<!--        <action-->
-<!--            android:id="@+id/action_objectDetailFragment_to_mtrDetailFragment"-->
-<!--            app:destination="@id/mtrDetailFragment" />-->
-<!--    </fragment>-->
-
     <fragment
         android:id="@+id/mtrDetailFragment"
-        android:name="com.example.tateknew.ui.MTR.MTRFragment"
-        android:label="Mtr Detail">
+        android:name="com.example.tateknew.ui.MTR.MtrDetailFragment"
+        android:label="Mtr Detail"
+        tools:layout="@layout/fragment_mtr_detail">
         <argument
             android:name="mtrId"
             app:argType="long" />
