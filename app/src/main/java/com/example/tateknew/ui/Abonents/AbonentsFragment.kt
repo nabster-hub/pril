@@ -1,6 +1,7 @@
 package com.example.tateknew.ui.Abonents
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +31,7 @@ class AbonentsFragment : Fragment(), OnAbonentClickListener {
         arguments?.let {
             objectId = it.getInt("objectId")
         }
+        println("abonents fragment ${objectId.toString()}")
     }
 
     override fun onCreateView(
@@ -61,31 +63,37 @@ class AbonentsFragment : Fragment(), OnAbonentClickListener {
     }
 
     override fun onAbonentClick(abonentId: Long) {
-        val db = AppDatabase.getDatabase(requireContext())
+        val action = AbonentsFragmentDirections.actionAbonentsFragmentToMtrFragment(abonentId)
+        findNavController().navigate(action)
+//        val db = AppDatabase.getDatabase(requireContext())
+//
+//        lifecycleScope.launch {
+//            val mtrs = withContext(Dispatchers.IO) {
+//                db.mtrDao().getMtrsByAbonentId(abonentId)
+//            }
+//
+//            val mtrItems = withContext(Dispatchers.IO) {
+//                mtrs.map { entity ->
+//                    val abonent = db.abonentDao().getAbonentById(entity.abonentId)
+//                    MtrWithAbonent(
+//                        mtr = entity,
+//                        abonent = abonent
+//                    )
+//                }
+//            }
+//
+//            val adapter = MtrAdapter(mtrItems, this@AbonentsFragment)
+//            binding.recyclerView.adapter = adapter
 
-        lifecycleScope.launch {
-            val mtrs = withContext(Dispatchers.IO) {
-                db.mtrDao().getMtrsByAbonentId(abonentId)
-            }
-
-            val mtrItems = withContext(Dispatchers.IO) {
-                mtrs.map { entity ->
-                    val abonent = db.abonentDao().getAbonentById(entity.abonentId)
-                    MtrWithAbonent(
-                        mtr = entity,
-                        abonent = abonent
-                    )
-                }
-            }
-
-            val adapter = AbonentAdapter(mtrItems, this@AbonentsFragment)
-            binding.recyclerView.adapter = adapter
-
-            (binding.recyclerView.adapter as? MtrAdapter)?.setOnItemClickListener { mtrWithAbonent ->
-                val action = AbonentsFragmentDirections.actionAbonentsFragmentToMtrFragment(mtrId = mtrWithAbonent.mtr.id)
-                findNavController().navigate(action)
-            }
-        }
+//            (binding.recyclerView.adapter as? MtrAdapter)?.setOnItemClickListener { mtrWithAbonent ->
+//                val action = AbonentsFragmentDirections.actionAbonentsFragmentToMtrFragment(abonentId = mtrWithAbonent.mtr.abonentId)
+//                findNavController().navigate(action)
+//            }
+//            adapter.setOnItemClickListener { mtrWithAbonent ->
+//                val action = AbonentsFragmentDirections.actionAbonentsFragmentToMtrFragment(mtrWithAbonent.mtr.abonentId)
+//                findNavController().navigate(action)
+//            }
+//        }
     }
 
     override fun onDestroyView() {

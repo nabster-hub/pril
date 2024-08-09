@@ -1,31 +1,34 @@
 package com.example.tateknew.ui.MTR
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.tateknew.R
+import com.example.tateknew.data.MtrEntity
 import com.example.tateknew.data.MtrWithAbonent
 import com.example.tateknew.databinding.FragmentMtrBinding
+import com.example.tateknew.ui.Abonents.AbonentsViewModel
 import com.example.tateknew.ui.getData.OnAbonentClickListener
 
 class MTRFragment : Fragment() {
 
-    private var mtrId: Long = 0
+    private var abonentId: Long = 0
     private lateinit var binding: FragmentMtrBinding
     private lateinit var mtrAdapter: MtrAdapter
-    private val mtrList: List<MtrWithAbonent> = listOf()
+    private val mtrList: List<MtrEntity> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            mtrId = it.getLong("mtrId")
+            abonentId = it.getLong("abonentId")
         }
-        
+        println("mtr fragment ${abonentId.toString()}")
     }
 
     override fun onCreateView(
@@ -41,25 +44,24 @@ class MTRFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Инициализация адаптера
-        mtrAdapter = MtrAdapter(mtrList, object : OnAbonentClickListener {
-            override fun onAbonentClick(mtrId: Long) {
-                // Вызывается, когда элемент списка нажимается
-                val action = MTRFragmentDirections.actionMtrFragmentToMtrDetailFragment(mtrId)
-                findNavController().navigate(action)
-            }
-        })
-
-        // Установка обработчика кликов на элемент списка
-        mtrAdapter.setOnItemClickListener { mtrWithAbonent ->
-            val action = MTRFragmentDirections.actionMtrFragmentToMtrDetailFragment(mtrWithAbonent.mtr.id)
-            findNavController().navigate(action)
-        }
-
-        // Установка адаптера и layoutManager для RecyclerView
+        // Загрузка списка MTR для abonentId
+        val mtrsViewModel  = ViewModelProvider(this).get(MtrsViewModel::class.java)
+        mtrsViewModel.loadMtrs(abonentId)
+            mtrAdapter = MtrAdapter(mutableListOf(), object : OnAbonentClickListener {
+                override fun onAbonentClick(abonentId: Long) {
+                    val action = MTRFragmentDirections.actionMtrFragmentToMtrDetailFragment(abonentId)
+                    findNavController().navigate(action)
+                }
+            })
         binding.recyclerView.apply {
             adapter = mtrAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
+
+        // Наблюдение за списком MTR и обновление адаптера при изменении данных
+        mtrsViewModel.mtrs.observe(viewLifecycleOwner) { mtrs ->
+            mtrAdapter.updateData(mtrs)
+        }
     }
+
 }

@@ -4,30 +4,36 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tateknew.R
+import com.example.tateknew.data.MtrEntity
 import com.example.tateknew.data.MtrWithAbonent
 import com.example.tateknew.databinding.ItemMtrBinding
 import com.example.tateknew.ui.getData.OnAbonentClickListener
 
 
-class MtrAdapter(private val mtrs: List<MtrWithAbonent>, private val listener: OnAbonentClickListener) :
+class MtrAdapter(private val mtrs: MutableList<MtrEntity>, private val listener: OnAbonentClickListener) :
     RecyclerView.Adapter<MtrAdapter.MtrViewHolder>() {
 
-    private var onItemClickListener: ((MtrWithAbonent) -> Unit)? = null
+    private var onItemClickListener: ((MtrEntity) -> Unit)? = null
 
-    fun setOnItemClickListener(listener: (MtrWithAbonent) -> Unit) {
+    fun setOnItemClickListener(listener: (MtrEntity) -> Unit) {
         onItemClickListener = listener
+    }
+    fun updateData(newMtrs: List<MtrEntity>) {
+        mtrs.clear()
+        mtrs.addAll(newMtrs)
+        notifyDataSetChanged()
     }
 
     inner class MtrViewHolder(val binding: ItemMtrBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             itemView.setOnClickListener {
                 val mtr = mtrs[adapterPosition]
-                listener.onAbonentClick(mtr.mtr.id)
+                listener.onAbonentClick(mtr.id)
                 onItemClickListener?.invoke(mtr)
             }
         }
-        fun bind(item: MtrWithAbonent) {
-            binding.name.text = "Наименование МТР: ${item.mtr.name}, номер: ${item.mtr.itemNo}"
+        fun bind(item: MtrEntity) {
+            binding.name.text = "Наименование МТР: ${item.name}, номер: ${item.itemNo}"
         }
     }
 
