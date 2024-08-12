@@ -33,7 +33,7 @@ class MtrAdapter(private val mtrs: MutableList<MtrEntity>, private val listener:
             }
         }
         fun bind(item: MtrEntity) {
-            binding.name.text = "Наименование МТР: ${item.name}, номер: ${item.itemNo}"
+            binding.name.text = "Тип: ${item.name}, №: ${item.itemNo}"
         }
     }
 
