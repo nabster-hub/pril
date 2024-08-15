@@ -30,6 +30,7 @@ import com.example.tateknew.R
 import com.example.tateknew.data.AppDatabase
 import com.example.tateknew.databinding.FragmentMtrDetailBinding
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -179,9 +180,13 @@ class MtrDetailFragment : Fragment() {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
             photoUri?.let { uri ->
                 val inputStream = requireContext().contentResolver.openInputStream(uri)
-                val bitmap = BitmapFactory.decodeStream(inputStream)
+                //val bitmap = BitmapFactory.decodeStream(inputStream)
                 inputStream?.close()
-                compressImage(bitmap)
+
+                val originalFile = getFileFromUri(uri)
+
+                compressImage(originalFile)
+                deleteFileFromUri(uri)
             }
         }
     }
@@ -222,7 +227,9 @@ class MtrDetailFragment : Fragment() {
             }
         }
     }
-    fun compressImage(bitmap: Bitmap) {
+
+    fun compressImage(originalFile: File) {
+        val bitmap = BitmapFactory.decodeFile(originalFile.absolutePath)
         // Получение размеров изображения
         val originalWidth = bitmap.width
         val originalHeight = bitmap.height
@@ -254,11 +261,38 @@ class MtrDetailFragment : Fragment() {
 
         // Очищаем память
         resizedBitmap.recycle()
+        bitmap.recycle()
+
+        if (imageFile.exists()) {
+            originalFile.delete()  // Delete the original file if the compressed one is successfully created
+        }
 
         // Обновление ImageView с новым сжатым и масштабированным изображением
         binding.imageView.setImageURI(Uri.fromFile(imageFile))
     }
 
+    private fun getFileFromUri(uri: Uri): File {
+        val contentResolver = requireContext().contentResolver
+        val file = File(requireContext().cacheDir, "temp_image") // временный файл
+        contentResolver.openInputStream(uri).use { inputStream ->
+            FileOutputStream(file).use { outputStream ->
+                inputStream?.copyTo(outputStream)
+            }
+        }
+        return file
+    }
 
+    fun deleteFileFromUri(uri: Uri) {
+        try {
+            val deleted = requireContext().contentResolver.delete(uri, null, null) > 0
+            if (deleted) {
+                Log.d("FileDeletion", "Original file deleted successfully")
+            } else {
+                Log.d("FileDeletion", "Failed to delete original file.")
+            }
+        } catch (e: Exception) {
+            Log.d("FileDeletion", "Error deleting file: ${e.message}")
+        }
+    }
 
 }
