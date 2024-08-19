@@ -41,12 +41,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         if (token != null && tokenManager.isTokenValid(token)) {
-//            if (checkBiometricSupport() && !isBiometricAuthenticated) {
-//                showBiometricPrompt()
-//            } else {
-//                processToken(token)
-//            }
-            authenticateUser()
+            val savedPin = getSavedPinCode()
+            if(savedPin != null){
+                authenticateUser()
+            }else{
+                processToken(token)
+            }
+
         } else {
             navigateToLogin()
         }
@@ -165,33 +166,6 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
-
-//    private fun showPinCodeDialog() {
-//        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_pin_code, null)
-//        val pinCodeEditText = dialogView.findViewById<EditText>(R.id.pinCodeEditText)
-//
-//        val dialog = AlertDialog.Builder(this)
-//            .setView(dialogView)
-//            .setCancelable(false)
-//            .create()
-//
-//        dialogView.findViewById<Button>(R.id.btnSubmitPin).setOnClickListener {
-//            val inputPin = pinCodeEditText.text.toString()
-//            if (checkPinCode(inputPin)) {
-//                dialog.dismiss()
-//                val token = TokenManager(this).getToken()
-//                if (token != null && TokenManager(this).isTokenValid(token)) {
-//                    processToken(token)
-//                } else {
-//                    navigateToLogin()
-//                }
-//            } else {
-//                Toast.makeText(this, "Invalid PIN code", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//
-//        dialog.show()
-//    }
 
     private fun checkPinCode(inputPin: String): Boolean {
         val savedPin = getSavedPinCode()

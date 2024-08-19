@@ -34,6 +34,7 @@ class MtrDetailFragment : Fragment() {
     private var sredRashod = 0
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
+    private var isPhotoTaken = false
 
     companion object {
         private const val REQUEST_CAMERA_PERMISSION = 101
@@ -105,6 +106,23 @@ class MtrDetailFragment : Fragment() {
 
     private fun validateAndSave() {
         val currentReading = binding.currentReading.text.toString().toDoubleOrNull()
+
+        if(!isPhotoTaken){
+            AlertDialog.Builder(requireContext())
+                .setTitle("Отсутвует фото")
+                .setMessage("Данные без фото счетчика не принимаются")
+                .setNegativeButton("Ок") { dialog, _ -> dialog.dismiss() }
+                .show()
+        }
+
+        if (latitude == 0.0 || longitude == 0.0) {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Отсутвует данные GPS")
+                .setMessage("GPS данные отсутствуют. Пожалуйста, включите GPS и сделайте фото.")
+                .setNegativeButton("Ок") { dialog, _ -> dialog.dismiss() }
+                .show()
+        }
+
         if (currentReading != null) {
             val difference = currentReading - mtrVl
             val percentageDifference = difference / sredRashod * 100
@@ -113,6 +131,12 @@ class MtrDetailFragment : Fragment() {
             } else {
                 saveData()
             }
+        }else{
+            AlertDialog.Builder(requireContext())
+                .setTitle("Отсутвует данные по расходу")
+                .setMessage("Данные по счётчику не предоставленны")
+                .setNegativeButton("Ок") { dialog, _ -> dialog.dismiss() }
+                .show()
         }
     }
 
@@ -140,6 +164,7 @@ class MtrDetailFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CameraHandler.REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
+            isPhotoTaken = true
             cameraHandler.handlePhotoResult()
         }
     }
@@ -166,7 +191,9 @@ class MtrDetailFragment : Fragment() {
                 Log.d("Locations", "Latitude: ${latitude}")
                 Log.d("Locations", "longitude: ${longitude}")
             }
-            cameraHandler.dispatchTakePictureIntent()
+            if (!isPhotoTaken) {  // Проверка перед открытием камеры
+                cameraHandler.dispatchTakePictureIntent()
+            }
         }
     }
 
