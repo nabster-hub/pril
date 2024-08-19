@@ -5,6 +5,8 @@ import android.util.Base64
 import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import org.json.JSONObject
 import java.nio.charset.Charset
 import java.util.Date
@@ -22,9 +24,9 @@ class TokenManager(context: Context) {
 
     fun saveToken(token: String) {
         try {
-            val editor = sharedPreferences.edit()
-            editor.putString("jwt_token", token)
-            editor.apply()
+            val jsonObject = Gson().fromJson<JsonObject>(token, JsonObject::class.java)
+            val accessToken = jsonObject.get("access_token").asString
+            sharedPreferences.edit().putString("jwt_token", accessToken).apply()
             Log.d("TokenManager", "Token saved successfully")
         } catch (e: Exception) {
             Log.e("TokenManager", "Error saving token: ${e.message}")
@@ -35,7 +37,7 @@ class TokenManager(context: Context) {
         return try {
             val token = sharedPreferences.getString("jwt_token", null)
             Log.d("TokenManager", "Retrieved token: $token")
-            token?.trim('"')
+            token?.trim()
         } catch (e: Exception) {
             Log.e("TokenManager", "Error retrieving token: ${e.message}")
             null
