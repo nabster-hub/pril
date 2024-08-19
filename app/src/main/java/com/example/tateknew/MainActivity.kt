@@ -6,7 +6,7 @@ import android.util.Log
 import android.view.Menu
 import android.widget.TextView
 import android.widget.Toast
-import com.google.android.material.snackbar.Snackbar
+import android.widget.Button
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -18,14 +18,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
+import android.widget.EditText
 import com.auth0.android.jwt.DecodeException
 import com.auth0.android.jwt.JWT
 import com.example.tateknew.databinding.ActivityMainBinding
-import com.google.gson.Gson
-import com.google.gson.JsonObject
-import com.google.gson.JsonSyntaxException
-import kotlinx.coroutines.launch
+import android.app.AlertDialog
+import android.view.LayoutInflater
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,11 +41,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         if (token != null && tokenManager.isTokenValid(token)) {
-            if (checkBiometricSupport() && !isBiometricAuthenticated) {
-                showBiometricPrompt()
-            } else {
-                processToken(token)
-            }
+//            if (checkBiometricSupport() && !isBiometricAuthenticated) {
+//                showBiometricPrompt()
+//            } else {
+//                processToken(token)
+//            }
+            authenticateUser()
         } else {
             navigateToLogin()
         }
@@ -166,4 +165,162 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
+
+//    private fun showPinCodeDialog() {
+//        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_pin_code, null)
+//        val pinCodeEditText = dialogView.findViewById<EditText>(R.id.pinCodeEditText)
+//
+//        val dialog = AlertDialog.Builder(this)
+//            .setView(dialogView)
+//            .setCancelable(false)
+//            .create()
+//
+//        dialogView.findViewById<Button>(R.id.btnSubmitPin).setOnClickListener {
+//            val inputPin = pinCodeEditText.text.toString()
+//            if (checkPinCode(inputPin)) {
+//                dialog.dismiss()
+//                val token = TokenManager(this).getToken()
+//                if (token != null && TokenManager(this).isTokenValid(token)) {
+//                    processToken(token)
+//                } else {
+//                    navigateToLogin()
+//                }
+//            } else {
+//                Toast.makeText(this, "Invalid PIN code", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//
+//        dialog.show()
+//    }
+
+    private fun checkPinCode(inputPin: String): Boolean {
+        val savedPin = getSavedPinCode()
+        return savedPin != null && savedPin == inputPin
+    }
+
+    private fun getSavedPinCode(): String? {
+        val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        return sharedPreferences.getString("user_pin_code", null)
+    }
+
+    private fun savePinCode(pinCode: String) {
+        val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        sharedPreferences.edit().putString("user_pin_code", pinCode).apply()
+    }
+
+    private fun authenticateUser() {
+        if (checkBiometricSupport()) {
+            val promptInfo = BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Biometric login")
+                .setSubtitle("Log in using your biometric credential")
+                .setNegativeButtonText("Use PIN code")
+                .build()
+
+            val biometricPromptCallback = BiometricPrompt(this, ContextCompat.getMainExecutor(this),
+                object : BiometricPrompt.AuthenticationCallback() {
+                    override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                        super.onAuthenticationError(errorCode, errString)
+                        if (errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON) {
+                            handlePinCode() // Обрабатываем PIN-код
+                        } else {
+                            navigateToLogin()
+                        }
+                    }
+
+                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                        super.onAuthenticationSucceeded(result)
+                        isBiometricAuthenticated = true  // Устанавливаем флаг, что аутентификация прошла успешно
+                        val token = TokenManager(this@MainActivity).getToken()
+                        if (token != null && TokenManager(this@MainActivity).isTokenValid(token)) {
+                            processToken(token)
+                        } else {
+                            navigateToLogin()
+                        }
+                    }
+
+                    override fun onAuthenticationFailed() {
+                        super.onAuthenticationFailed()
+                        Toast.makeText(applicationContext, "Authentication failed", Toast.LENGTH_SHORT).show()
+                    }
+                })
+
+            biometricPromptCallback.authenticate(promptInfo)
+        } else {
+            handlePinCode() // Если биометрия недоступна, сразу обрабатываем PIN-код
+        }
+    }
+
+    private fun handlePinCode() {
+        val savedPin = getSavedPinCode()
+        if (savedPin == null) {
+            // PIN-код еще не установлен, показываем диалог для создания нового PIN-кода
+            showCreatePinCodeDialog()
+        } else {
+            // PIN-код уже существует, показываем диалог для ввода PIN-кода
+            showPinCodeDialog()
+        }
+    }
+
+    private fun showCreatePinCodeDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_create_pin_code, null)
+        val pinCodeEditText = dialogView.findViewById<EditText>(R.id.pinCodeEditText)
+        val confirmPinCodeEditText = dialogView.findViewById<EditText>(R.id.confirmPinCodeEditText)
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+
+        dialogView.findViewById<Button>(R.id.btnSubmitPin).setOnClickListener {
+            val pin = pinCodeEditText.text.toString()
+            val confirmPin = confirmPinCodeEditText.text.toString()
+
+            if (pin.isEmpty() || confirmPin.isEmpty()) {
+                Toast.makeText(this, "Please enter and confirm your PIN code", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (pin == confirmPin) {
+                savePinCode(pin)
+                Toast.makeText(this, "PIN code created successfully", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+                // Продолжаем аутентификацию
+                handlePinCode()
+            } else {
+                Toast.makeText(this, "PIN codes do not match", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun showPinCodeDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_pin_code, null)
+        val pinCodeEditText = dialogView.findViewById<EditText>(R.id.pinCodeEditText)
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+
+        dialogView.findViewById<Button>(R.id.btnSubmitPin).setOnClickListener {
+            val inputPin = pinCodeEditText.text.toString()
+            if (checkPinCode(inputPin)) {
+                dialog.dismiss()
+                val token = TokenManager(this).getToken()
+                if (token != null && TokenManager(this).isTokenValid(token)) {
+                    processToken(token)
+                } else {
+                    navigateToLogin()
+                }
+            } else {
+                Toast.makeText(this, "Invalid PIN code", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        dialog.show()
+    }
+
+
+
 }
