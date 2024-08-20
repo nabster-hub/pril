@@ -18,6 +18,7 @@ import java.util.Locale
 
 class CameraHandler(private val fragment: Fragment, private val binding: FragmentMtrDetailBinding) {
     private var photoUri: Uri? = null
+    private var currentPhotoPath: String? = null
 
     companion object {
         const val REQUEST_TAKE_PHOTO = 1
@@ -39,6 +40,7 @@ class CameraHandler(private val fragment: Fragment, private val binding: Fragmen
                         it
                     )
                     photoUri = photoURI
+                    currentPhotoPath = it.absolutePath
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                     fragment.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO)
                 }
@@ -49,7 +51,11 @@ class CameraHandler(private val fragment: Fragment, private val binding: Fragmen
     fun handlePhotoResult() {
         photoUri?.let { uri ->
             val originalFile = FileUtils.getFileFromUri(fragment.requireContext(), uri)
-            FileUtils.compressImage(fragment.requireContext(), originalFile, binding)
+            val compressedFile = FileUtils.compressImage(fragment.requireContext(), originalFile, binding)
+            if (compressedFile != null) {
+                // Обновляем путь к фото на новый после сжатия
+                currentPhotoPath = compressedFile.absolutePath
+            }
             FileUtils.deleteFileFromUri(fragment.requireContext(), uri)
         }
     }
@@ -61,6 +67,11 @@ class CameraHandler(private val fragment: Fragment, private val binding: Fragmen
             "JPEG_${timeStamp}_",
             ".jpg",
             storageDir
-        )
+        ).apply {
+            currentPhotoPath = absolutePath
+        }
+    }
+    fun getCurrentPhotoPath(): String? {
+        return currentPhotoPath
     }
 }

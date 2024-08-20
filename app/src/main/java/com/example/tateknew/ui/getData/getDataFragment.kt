@@ -79,12 +79,10 @@ class getDataFragment : Fragment() {
         val repository = Repository(db)
         val networkManager = NetworkManager()
         val token = TokenManager(this.requireContext()).getToken()
-        val jsonObject = Gson().fromJson<JsonObject>(token, JsonObject::class.java)
-        val accessToken = jsonObject.get("access_token").asString
 
         lifecycleScope.launch{
             val success = withContext(Dispatchers.IO){
-                networkManager.getTasks(accessToken, repository)
+                networkManager.getTasks(token!!, repository)
             }
 
             loadingIndicator.visibility = View.GONE

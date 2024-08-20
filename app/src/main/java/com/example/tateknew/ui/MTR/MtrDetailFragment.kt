@@ -17,11 +17,18 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.example.tateknew.R
+import com.example.tateknew.data.AppDatabase
+import com.example.tateknew.data.MeterReading
 import com.example.tateknew.databinding.FragmentMtrDetailBinding
 import com.example.tateknew.utils.LocationHandler
 import com.example.tateknew.utils.PermissionUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Date
 
 class MtrDetailFragment : Fragment() {
 
@@ -150,7 +157,37 @@ class MtrDetailFragment : Fragment() {
     }
 
     private fun saveData() {
-        Toast.makeText(context, "Сохранено", Toast.LENGTH_SHORT).show()
+        val currentReading = binding.currentReading.text.toString().toDoubleOrNull()
+        val photoPath = cameraHandler.getCurrentPhotoPath() // Получаем путь к фото
+        Log.d("photoPath", photoPath!!)
+        if (photoPath.isNullOrEmpty()) {  // Обработка случая, когда photoPath может быть null или пустым
+            Toast.makeText(context, "Необходимо сделать фото", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (currentReading != null && isPhotoTaken && latitude != 0.0 && longitude != 0.0) {
+            val meterReading = MeterReading(
+                mtrId = args.mtrId,
+                currentReading = currentReading,
+                photoPath = photoPath,
+                latitude = latitude,
+                longitude = longitude,
+                createdAt = Date()
+            )
+
+            lifecycleScope.launch {
+                val db = AppDatabase.getDatabase(requireContext())
+                withContext(Dispatchers.IO){
+                    db.meterReadingDao().insertMeterReading(meterReading)
+                }
+                withContext(Dispatchers.Main){
+                    Toast.makeText(context, "Данные сохранены", Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        } else {
+            Toast.makeText(context, "Необходимо заполнить все поля и сделать фото", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

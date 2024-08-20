@@ -9,6 +9,7 @@ import android.util.Log
 import com.example.tateknew.databinding.FragmentMtrDetailBinding
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -26,23 +27,34 @@ object FileUtils {
         return file
     }
 
-    fun compressImage(context: Context, originalFile: File, binding: FragmentMtrDetailBinding) {
+    fun compressImage(context: Context, originalFile: File, binding: FragmentMtrDetailBinding): File? {
         val bitmap = BitmapFactory.decodeFile(originalFile.absolutePath)
         val resizedBitmap = resizeBitmap(bitmap, 1024, 768)
         val compressedFile = createCompressedFile(context)
 
-        FileOutputStream(compressedFile).use { out ->
-            resizedBitmap.compress(Bitmap.CompressFormat.WEBP, 80, out)
+        return try {
+            // Сжимаем изображение и сохраняем в формате WebP
+            FileOutputStream(compressedFile).use { out ->
+                resizedBitmap.compress(Bitmap.CompressFormat.WEBP, 80, out)
+            }
+
+            // Освобождаем ресурсы Bitmap
+            resizedBitmap.recycle()
+            bitmap.recycle()
+
+            // Удаляем оригинальный файл после успешного сжатия
+            if (compressedFile.exists()) {
+                originalFile.delete()
+            }
+
+            // Обновляем ImageView с новым сжатым изображением
+            binding.imageView.setImageURI(Uri.fromFile(compressedFile))
+
+            compressedFile  // Возвращаем сжатый файл
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null  // Возвращаем null, если произошла ошибка
         }
-
-        resizedBitmap.recycle()
-        bitmap.recycle()
-
-        if (compressedFile.exists()) {
-            originalFile.delete()
-        }
-
-        binding.imageView.setImageURI(Uri.fromFile(compressedFile))
     }
 
     private fun resizeBitmap(bitmap: Bitmap, maxWidth: Int, maxHeight: Int): Bitmap {
