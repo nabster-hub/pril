@@ -63,7 +63,7 @@ class Repository(private val db: AppDatabase) {
             ctt = abonent.optString("ctt"),
             ct = abonent.optInt("ct"),
             name = abonent.optString("name"),
-            clientNo = abonent.optInt("client_no"),
+            clientNo = abonent.optLong("client_no"),
             address = abonent.optString("address"),
             baseId = abonent.optInt("base_id"),
             clientGr = abonent.optString("client_gr"),

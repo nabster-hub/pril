@@ -10,7 +10,7 @@ data class AbonentEntity(
     val ctt: String,
     val ct: Int,
     val name: String,
-    val clientNo: Int,
+    val clientNo: Long,
     val address: String,
     val baseId: Int,
     val clientGr: String,

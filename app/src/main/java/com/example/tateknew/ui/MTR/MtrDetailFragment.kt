@@ -6,6 +6,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -61,6 +62,8 @@ class MtrDetailFragment : Fragment() {
 
         viewModel = ViewModelProvider(this, MtrDetailViewModelFactory(requireContext())).get(MtrDetailViewModel::class.java)
         cameraHandler = CameraHandler(this, binding)
+
+        loadMeterReadingData()
 
         locationHandler = LocationHandler(requireContext())
 
@@ -157,7 +160,8 @@ class MtrDetailFragment : Fragment() {
     }
 
     private fun saveData() {
-        val currentReading = binding.currentReading.text.toString().toDoubleOrNull()
+        val currentReadingText = binding.currentReading.text.toString()
+        val currentReading = currentReadingText.toBigDecimalOrNull()
         val photoPath = cameraHandler.getCurrentPhotoPath() // Получаем путь к фото
         Log.d("photoPath", photoPath!!)
         if (photoPath.isNullOrEmpty()) {  // Обработка случая, когда photoPath может быть null или пустым
@@ -230,6 +234,26 @@ class MtrDetailFragment : Fragment() {
             }
             if (!isPhotoTaken) {  // Проверка перед открытием камеры
                 cameraHandler.dispatchTakePictureIntent()
+            }
+        }
+    }
+
+    private fun loadMeterReadingData() {
+        lifecycleScope.launch {
+            val db = AppDatabase.getDatabase(requireContext())
+
+            // Получаем данные последнего ввода для данного счетчика
+            val lastMeterReading = withContext(Dispatchers.IO) {
+                db.meterReadingDao().getLastMeterReadingForMtr(args.mtrId)
+            }
+
+            // Если данные существуют, отображаем их
+            lastMeterReading?.let { reading ->
+                binding.currentReading.setText(reading.currentReading.toString())
+                binding.imageView.setImageURI(Uri.parse(reading.photoPath))
+                latitude = reading.latitude
+                longitude = reading.longitude
+                isPhotoTaken = true
             }
         }
     }

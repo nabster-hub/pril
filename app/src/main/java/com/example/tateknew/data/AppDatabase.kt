@@ -8,10 +8,11 @@ import android.content.Context
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.tateknew.data.converters.Converters
 import com.example.tateknew.data.converters.DateConverter
 
-@Database(entities = [TpsEntity::class, MtrEntity::class, AbonentEntity::class, MeterReading::class], version = 3)
-@TypeConverters(DateConverter::class)
+@Database(entities = [TpsEntity::class, MtrEntity::class, AbonentEntity::class, MeterReading::class], version = 1)
+@TypeConverters(DateConverter::class, Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun objectDao(): TpsDao
     abstract fun mtrDao(): MtrDao
@@ -34,19 +35,5 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        val MIGRATION_1_2 = object : Migration(1, 2) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL(
-                    "CREATE TABLE `meter_readings` (" +
-                            "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-                            "`mtrId` INTEGER NOT NULL," +
-                            "`currentReading` REAL NOT NULL," +
-                            "`photoPath` TEXT NOT NULL," +
-                            "`latitude` REAL NOT NULL," +
-                            "`longitude` REAL NOT NULL," +
-                            "`createdAt` INTEGER NOT NULL)"
-                )
-            }
-        }
     }
 }

@@ -13,4 +13,7 @@ interface MeterReadingDao {
 
     @Query("SELECT * FROM meter_readings WHERE mtrId = :mtrId ORDER BY createdAt DESC")
     fun getMeterReadingsForMtr(mtrId: Long): LiveData<List<MeterReading>>
+
+    @Query("SELECT * FROM meter_readings WHERE mtrId = :mtrId ORDER BY createdAt DESC LIMIT 1")
+    fun getLastMeterReadingForMtr(mtrId: Long): MeterReading?
 }
