@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.tateknew.R
 import com.example.tateknew.data.AppDatabase
@@ -186,6 +187,8 @@ class MtrDetailFragment : Fragment() {
                 }
                 withContext(Dispatchers.Main){
                     Toast.makeText(context, "Данные сохранены", Toast.LENGTH_SHORT).show()
+
+                    findNavController().popBackStack(R.id.abonentsFragment, false)
                 }
 
             }
