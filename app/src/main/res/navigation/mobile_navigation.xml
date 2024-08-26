@@ -58,7 +58,8 @@
             app:popUpToInclusive="false" />
         <argument
             android:name="abonentId"
-            app:argType="long" />
+            app:argType="long"
+            />
     </fragment>
     <fragment
         android:id="@+id/mtrDetailFragment"

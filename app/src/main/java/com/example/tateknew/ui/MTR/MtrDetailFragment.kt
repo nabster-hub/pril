@@ -30,6 +30,7 @@ import com.example.tateknew.utils.PermissionUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.util.Date
 
 class MtrDetailFragment : Fragment() {
@@ -49,6 +50,7 @@ class MtrDetailFragment : Fragment() {
         private const val REQUEST_CAMERA_PERMISSION = 101
         private val LOCATION_PERMISSION_REQUEST_CODE = 102
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -164,8 +166,7 @@ class MtrDetailFragment : Fragment() {
         val currentReadingText = binding.currentReading.text.toString()
         val currentReading = currentReadingText.toBigDecimalOrNull()
         val photoPath = cameraHandler.getCurrentPhotoPath() // Получаем путь к фото
-        Log.d("photoPath", photoPath!!)
-        if (photoPath.isNullOrEmpty()) {  // Обработка случая, когда photoPath может быть null или пустым
+        if (photoPath.isNullOrEmpty() || !File(photoPath).exists()) {  // Обработка случая, когда photoPath может быть null или пустым
             Toast.makeText(context, "Необходимо сделать фото", Toast.LENGTH_SHORT).show()
             return
         }
@@ -257,6 +258,7 @@ class MtrDetailFragment : Fragment() {
                 latitude = reading.latitude
                 longitude = reading.longitude
                 isPhotoTaken = true
+                cameraHandler.setCurrentPhotoPath(reading.photoPath)
             }
         }
     }

@@ -24,6 +24,10 @@ class CameraHandler(private val fragment: Fragment, private val binding: Fragmen
         const val REQUEST_TAKE_PHOTO = 1
     }
 
+    fun setCurrentPhotoPath(path: String?) {
+        currentPhotoPath = path
+    }
+
     fun dispatchTakePictureIntent() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             takePictureIntent.resolveActivity(fragment.requireContext().packageManager)?.also {

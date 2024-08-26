@@ -19,6 +19,7 @@ import com.example.tateknew.ui.getData.OnAbonentClickListener
 class MTRFragment : Fragment() {
 
     private var abonentId: Long = 0
+    private var nobjId: Int = 0
     private lateinit var binding: FragmentMtrBinding
     private lateinit var mtrAdapter: MtrAdapter
     private val mtrList: List<MtrEntity> = listOf()
@@ -27,6 +28,7 @@ class MTRFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             abonentId = it.getLong("abonentId")
+            nobjId = it.getInt("nobjId")
         }
         println("mtr fragment ${abonentId.toString()}")
     }
