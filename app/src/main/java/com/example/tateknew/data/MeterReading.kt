@@ -7,7 +7,7 @@ import java.util.Date
 
 @Entity(tableName = "meter_readings")
 data class MeterReading(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    @PrimaryKey(autoGenerate = true) var id: Long = 0,
     val mtrId: Long,
     val currentReading: BigDecimal,
     val photoPath: String,

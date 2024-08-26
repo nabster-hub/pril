@@ -31,7 +31,6 @@ class AbonentsFragment : Fragment(), OnAbonentClickListener {
         arguments?.let {
             objectId = it.getInt("objectId")
         }
-        println("abonents fragment ${objectId.toString()}")
     }
 
     override fun onCreateView(

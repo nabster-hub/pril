@@ -27,11 +27,16 @@ interface MtrDao {
                abonents.home AS abonent_home, 
                abonents.flat AS abonent_flat, 
                abonents.createdAt AS abonent_createdAt, 
-               abonents.updatedAt AS abonent_updatedAt 
+               abonents.updatedAt AS abonent_updatedAt,
+               CASE 
+                   WHEN meter_readings.id IS NOT NULL THEN 1 
+                   ELSE 0 
+               END AS exist_meter 
         FROM mtrs 
         JOIN abonents ON mtrs.abonentId = abonents.clientId 
+        LEFT JOIN meter_readings ON mtrs.id = meter_readings.mtrId
         WHERE mtrs.nobjId = :objectId GROUP BY mtrs.abonentId
-        ORDER BY abonents.street, 
+        ORDER BY exist_meter ASC, abonents.street, 
                     CAST(abonents.home AS INTEGER), 
                     CAST(abonents.flat AS INTEGER)
     """)

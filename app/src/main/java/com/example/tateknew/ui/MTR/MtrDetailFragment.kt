@@ -45,6 +45,7 @@ class MtrDetailFragment : Fragment() {
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
     private var isPhotoTaken = false
+    private var edited: Long = 0
 
     companion object {
         private const val REQUEST_CAMERA_PERMISSION = 101
@@ -172,7 +173,7 @@ class MtrDetailFragment : Fragment() {
         }
 
         if (currentReading != null && isPhotoTaken && latitude != 0.0 && longitude != 0.0) {
-            val meterReading = MeterReading(
+            var meterReading = MeterReading(
                 mtrId = args.mtrId,
                 currentReading = currentReading,
                 photoPath = photoPath,
@@ -180,11 +181,18 @@ class MtrDetailFragment : Fragment() {
                 longitude = longitude,
                 createdAt = Date()
             )
+            if(edited > 0){
+                meterReading.id = edited
+            }
 
             lifecycleScope.launch {
                 val db = AppDatabase.getDatabase(requireContext())
                 withContext(Dispatchers.IO){
-                    db.meterReadingDao().insertMeterReading(meterReading)
+                    if(edited > 0){
+                        db.meterReadingDao().updateMeterReading(meterReading)
+                    } else {
+                        db.meterReadingDao().insertMeterReading(meterReading)
+                    }
                 }
                 withContext(Dispatchers.Main){
                     Toast.makeText(context, "Данные сохранены", Toast.LENGTH_SHORT).show()
@@ -259,6 +267,7 @@ class MtrDetailFragment : Fragment() {
                 longitude = reading.longitude
                 isPhotoTaken = true
                 cameraHandler.setCurrentPhotoPath(reading.photoPath)
+                edited = reading.id
             }
         }
     }
