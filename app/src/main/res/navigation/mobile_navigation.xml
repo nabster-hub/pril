@@ -13,12 +13,12 @@
     <fragment
         android:id="@+id/getData"
         android:name="com.example.tateknew.ui.getData.getDataFragment"
-        android:label="@string/menu_home"
+        android:label="@string/get_tasks"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/TPsFragment"
         android:name="com.example.tateknew.ui.Tps.TPSListFragment"
-        android:label="Список ТП"
+        android:label="@string/objects_tps"
         tools:layout="@layout/fragment_object_list">
         <action
             android:id="@+id/action_TPSListFragment_to_AbonentsFragment"
@@ -35,7 +35,7 @@
     <fragment
         android:id="@+id/abonentsFragment"
         android:name="com.example.tateknew.ui.Abonents.AbonentsFragment"
-        android:label="Abonents"
+        android:label="@string/abonents_list"
         tools:layout="@layout/fragment_abonents_detail">
         <action
             android:id="@+id/action_abonentsFragment_to_mtrFragment"
@@ -49,7 +49,7 @@
     <fragment
         android:id="@+id/mtrFragment"
         android:name="com.example.tateknew.ui.MTR.MTRFragment"
-        android:label="MTR Fragment"
+        android:label="@string/mtr_list"
         tools:layout="@layout/fragment_mtr">
         <action
             android:id="@+id/action_mtrFragment_to_mtrDetailFragment"
@@ -64,7 +64,7 @@
     <fragment
         android:id="@+id/mtrDetailFragment"
         android:name="com.example.tateknew.ui.MTR.MtrDetailFragment"
-        android:label="Mtr Detail"
+        android:label="@string/mtr_detail"
         tools:layout="@layout/fragment_mtr_detail">
         <argument
             android:name="mtrId"
