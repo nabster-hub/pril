@@ -61,8 +61,8 @@ class AbonentsFragment : Fragment(), OnAbonentClickListener {
         })
     }
 
-    override fun onAbonentClick(abonentId: Long) {
-        val action = AbonentsFragmentDirections.actionAbonentsFragmentToMtrFragment(abonentId)
+    override fun onMtrClick(abonentId: Long, nobjId: Int) {
+        val action = AbonentsFragmentDirections.actionAbonentsFragmentToMtrFragment(abonentId, nobjId)
         findNavController().navigate(action)
     }
 

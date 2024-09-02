@@ -18,10 +18,10 @@ class MtrsViewModel(application: Application) : AndroidViewModel(application) {
     private val _mtrs = MutableLiveData<List<MtrEntity>>()
     val mtrs: LiveData<List<MtrEntity>> get() = _mtrs
 
-    fun loadMtrs(abonentId: Long) {
+    fun loadMtrs(abonentId: Long, nobjId: Int) {
         viewModelScope.launch {
             val mtrsList = withContext(Dispatchers.IO) {
-                mtrsDao.getMtrsByAbonentId(abonentId)
+                mtrsDao.getMtrsByAbonentId(abonentId, nobjId)
             }
             _mtrs.postValue(mtrsList)
         }

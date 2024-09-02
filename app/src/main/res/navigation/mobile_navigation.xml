@@ -60,6 +60,9 @@
             android:name="abonentId"
             app:argType="long"
             />
+        <argument
+            android:name="nobjId"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/mtrDetailFragment"

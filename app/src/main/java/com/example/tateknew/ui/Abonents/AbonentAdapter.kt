@@ -16,7 +16,7 @@ class AbonentAdapter(
         fun bind(item: MtrWithAbonent) {
             binding.name.text = "Лицевой №:  ${item.abonent.clientNo}, Адрес: ${item.abonent.address} "
             binding.root.setOnClickListener {
-                clickListener.onAbonentClick(item.abonent.clientId)
+                clickListener.onMtrClick(item.abonent.clientId, item.mtr.nobjId)
             }
         }
     }

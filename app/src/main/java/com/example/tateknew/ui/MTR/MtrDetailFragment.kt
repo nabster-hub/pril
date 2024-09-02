@@ -78,7 +78,7 @@ class MtrDetailFragment : Fragment() {
                 binding.mtrType.text = mtr.mtr.name
                 binding.mtrNumber.text = mtr.mtr.itemNo
                 mtrVl = mtr.mtr.vl.toDoubleOrNull()!!
-                sredRashod = mtr.mtr.sredrashod!!
+                sredRashod = mtr.mtr.sredrashod?.toInt() ?: 0
             }
         }
 

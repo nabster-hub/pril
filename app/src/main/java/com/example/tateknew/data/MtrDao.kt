@@ -42,8 +42,8 @@ interface MtrDao {
     """)
     fun getAbonents(objectId: Int): List<MtrWithAbonent>
 
-    @Query("SELECT * FROM mtrs WHERE abonentId = :abonentId")//сделать сбор данных mtr только по текущей тп, без выбора других
-    fun getMtrsByAbonentId(abonentId: Long): List<MtrEntity>
+    @Query("SELECT * FROM mtrs WHERE abonentId = :abonentId and nobjId = :nobjId")//сделать сбор данных mtr только по текущей тп, без выбора других
+    fun getMtrsByAbonentId(abonentId: Long, nobjId: Int): List<MtrEntity>
 
     @Query("""
             SELECT mtrs.*, 

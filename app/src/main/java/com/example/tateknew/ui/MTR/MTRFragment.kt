@@ -30,7 +30,6 @@ class MTRFragment : Fragment() {
             abonentId = it.getLong("abonentId")
             nobjId = it.getInt("nobjId")
         }
-        println("mtr fragment ${abonentId.toString()}")
     }
 
     override fun onCreateView(
@@ -45,10 +44,9 @@ class MTRFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         // Загрузка списка MTR для abonentId
         val mtrsViewModel  = ViewModelProvider(this).get(MtrsViewModel::class.java)
-        mtrsViewModel.loadMtrs(abonentId)
+        mtrsViewModel.loadMtrs(abonentId, nobjId)
             mtrAdapter = MtrAdapter(mutableListOf(), object : OnAbonentClickListener {
                 override fun onAbonentClick(abonentId: Long) {
                     val action = MTRFragmentDirections.actionMtrFragmentToMtrDetailFragment(abonentId)
