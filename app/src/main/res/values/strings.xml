@@ -24,6 +24,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="mtr_list">MTR List</string>
     <string name="mtr_detail">MTR Detail</string>
+    <string name="logOut">LogOut</string>
+    <string name="problem_login">Have some problem with login please try later or contact with support</string>
     <string-array name="situation_array">
         <item>Обычно</item>
         <item>Нестандартная ситуация</item>

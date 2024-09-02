@@ -15,7 +15,7 @@
     <string name="password">Пароль</string>
     <string name="e_mail">E-mail</string>
     <string name="enterTitle">Вход</string>
-    <string name="invalid_email">Неверный Email</string>
+    <string name="invalid_email">Неверный формат Email</string>
     <string name="User_Home">Страница пользователя</string>
     <string name="get_tasks">Получить задачи</string>
     <string name="objects_tps">Список ТП</string>
@@ -24,6 +24,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="mtr_list">Список ПУ</string>
     <string name="mtr_detail">Данные счетчика</string>
+    <string name="logOut">Выйти</string>
+    <string name="problem_login">Произошли какие-то проблемы при входе попробуйте позже или свяжитесь с поддержкой</string>
     <string-array name="situation_array">
         <item>Обычно</item>
         <item>Нестандартная ситуация</item>

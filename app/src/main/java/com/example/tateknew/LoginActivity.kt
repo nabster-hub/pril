@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.example.tateknew.databinding.ActivityLoginBinding
+import org.json.JSONException
+import org.json.JSONObject
 
 class LoginActivity : AppCompatActivity() {
 
@@ -29,17 +31,7 @@ class LoginActivity : AppCompatActivity() {
                 var email = emailValue.text.toString();
                 var password = passwordValue.text.toString();
                 if(!isValidEmail(email)){
-                    tvErrors.text = ContextCompat.getString(
-                        this@LoginActivity,
-                        R.string.invalid_email
-                    );
-                    tvErrors.setTextColor(
-                        ContextCompat.getColor(
-                            this@LoginActivity,
-                            R.color.red
-                        )
-                    )
-                    tvErrors.isVisible = true
+                    showError(ContextCompat.getString(this@LoginActivity, R.string.invalid_email))
                     return@setOnClickListener
                 }
 
@@ -53,21 +45,22 @@ class LoginActivity : AppCompatActivity() {
                             runOnUiThread {
                                 if (token != null) {
                                     try{
-                                        tokenManager.saveToken(token)
-                                        var newToken = tokenManager.getToken();
-                                        println(newToken)
-                                        navigateToMain()
+                                        if(isJson(token)){
+                                            tokenManager.saveToken(token)
+//                                            val newToken = tokenManager.getToken();
+//                                            println(newToken)
+                                            navigateToMain()
+                                        }else{
+                                            showError(ContextCompat.getString(this@LoginActivity, R.string.problem_login))
+                                        }
+
                                     } catch (e: Exception){
                                         println("Error saving token: ${e.message}")
-                                        Toast.makeText(
-                                            this@LoginActivity,
-                                            "Error saving token: ${e.message}",
-                                            Toast.LENGTH_LONG
-                                        ).show()
+                                        showError(ContextCompat.getString(this@LoginActivity, R.string.problem_login))
                                     }
 
                                 } else {
-                                    Toast.makeText(this@LoginActivity, "Failed to retrieve token", Toast.LENGTH_LONG).show()
+                                    showError("Failed to retrieve token")
                                 }
                             }
                         }
@@ -95,5 +88,20 @@ class LoginActivity : AppCompatActivity() {
     private fun isValidEmail(email: String): Boolean {
         val emailRegex = Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
         return emailRegex.matches(email)
+    }
+
+    private fun isJson(token: String): Boolean {
+        return try {
+            JSONObject(token)
+            true
+        } catch (e: JSONException) {
+            false
+        }
+    }
+
+    private fun showError(message: String) {
+        binding.tvErrors.text = message
+        binding.tvErrors.setTextColor(ContextCompat.getColor(this@LoginActivity, R.color.red))
+        binding.tvErrors.isVisible = true
     }
 }
